@@ -1,0 +1,14 @@
+# Carpetas de compilación y salida
+/build/
+/dist/
+/target/
+
+# Configuración privada de NetBeans o IntelliJ
+/nbproject/private/
+/.idea/
+/*.iml
+
+# Archivos binarios y temporales
+*.war
+*.log
+.DS_Store
