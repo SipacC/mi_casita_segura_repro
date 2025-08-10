@@ -20,6 +20,8 @@
                         <th class="text-center">ID</th>
                         <th class="text-center">DPI</th>
                         <th class="text-center">NOMBRES</th>
+                        <th class = "text-center">ROL</th>
+                        <th class = "text-center">CONTRASEÑA</th>
                         <th class="text-center">ACCIONES</th>
                     </tr>
                 </thead>
@@ -29,7 +31,7 @@
                     if (list == null || list.isEmpty()) {
                 %>
                         <tr>
-                            <td colspan="4" class="text-center text-danger">No hay registros en la base de datos.</td>
+                            <td colspan="6" class="text-center text-danger">No hay registros en la base de datos.</td>
                         </tr>
                 <%
                     } else {
@@ -39,6 +41,8 @@
                             <td class="text-center"><%= per.getId() %></td>
                             <td class="text-center"><%= per.getDpi() %></td>
                             <td><%= per.getNom() %></td>
+                            <td class = "text-center"><%= per.getRol() %></td>
+                            <td class = "text-center"><%= per.getContrasena() %></td>
                             <td class="text-center">
                                 <a class="btn btn-warning" href="Controlador?accion=editar&id=<%= per.getId() %>">Editar</a>
                                 <a class="btn btn-danger" href="Controlador?accion=eliminar&id=<%= per.getId() %>">Remove</a>

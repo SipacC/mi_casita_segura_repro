@@ -2,6 +2,7 @@
     Document   : add
     Created on : 30-ago-2018, 19:58:16
     Author     : Joel
+    Modified   : josema manuel
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -16,11 +17,32 @@
         <div class="container">
             <div class="col-lg-6">
                 <h1>Agregar Persona</h1>
-                <form action="Controlador">
-                    DNI:<br>
-                    <input class="form-control" type="text" name="txtDpi"><br>
-                    Nombres: <br>
-                    <input class="form-control" type="text" name="txtNom"><br>
+                <form action="Controlador" method="get" autocomplete="off">
+                    <label> DPI:</label>
+                    <input class="form-control" type="text" name="txtDpi"
+                    autocomplete="off"
+                    value="" required><br>
+                    <label>Nombres:</label> 
+                    <input class="form-control" type="text" name="txtNom"
+                    autocomplete="off"
+                    value="" required><br>
+                    <label>Rol:</label>
+                    <select id="rol" class = "form-control" name = "txtRol" required>
+                        <option value="">Seleccione un rol</option>
+                        <option value="usuario">Usuario</option>
+                        <option value="administrador">Administrador</option>
+                    </select><br>
+                    <label>Contraseña:</label>
+                    <div class="input-group">
+                        <input class="form-control" type="password" name="txtContrasena"
+                               autocomplete="new-password"
+                               value="" required>
+                        <button type="button" class="btn btn-outline-secudary"
+                        onclick="const i=this.previousElementSibling; i.type=i.type==='password'?'text':'password'; this.innerText=i.type==='password'?'Mostrar':'Ocultar'">
+                    Mostrar
+                        </button>
+                    </div>
+                    <br>
                     <input class="btn btn-primary" type="submit" name="accion" value="Agregar">
                     <a href="Controlador?accion=listar">Regresar</a>
                 </form>
