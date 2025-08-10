@@ -25,9 +25,7 @@
                 <input type="hidden" name="txtid" value="<%= p.getId()%>">
                 <label for="dpi">DPI:</label>
                 <input id="dpi" class="form-control" type="text" name="txtDpi"
-                       value="<%=p.getDpi()%>" required
-                       <!-- maxlength="13" pattern="\\d{13}" title="Debe contener 13 dígitos"
->><br>
+                       value="<%=p.getDpi()%>" required><br>
                 <label for="nom">Nombres:</label>
                 <input id="nom" class="form-control" type="text" name="txtNom"
                          value="<%= p.getNom()%>" required><br>
