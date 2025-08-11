@@ -23,7 +23,6 @@ public class Controlador extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -99,6 +98,30 @@ public class Controlador extends HttpServlet {
             response.sendRedirect("Controlador?accion=listar");
             return;
         }
+        else if (action.equalsIgnoreCase("login")) {
+            acceso = "vistas/login.jsp";
+        }
+        else if (action.equalsIgnoreCase("valida")) {
+            String nom = request.getParameter("nom");
+            String contrasena = request.getParameter("contrasena");
+            String rol = request.getParameter("rol");
+
+            Persona usuario = dao.findByCredenciales(nom, contrasena, rol);
+            if(usuario != null) {
+                request.getSession().setAttribute("usuario", usuario);
+                response.sendRedirect("Controlador?accion=listar");
+                return;   
+            } else {
+                request.setAttribute("error", "Credenciales invalidas");
+                acceso = "vistas/login.jsp";
+            }
+        }
+        else if (action.equalsIgnoreCase("logout")) {
+            request.getSession().invalidate();
+            response.sendRedirect("Controlador?accion=login");
+            return;
+        }
+
         RequestDispatcher vista=request.getRequestDispatcher(acceso);
         vista.forward(request, response);
     }

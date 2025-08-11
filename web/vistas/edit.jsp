@@ -2,6 +2,13 @@
 <%@page import="Modelo.Persona"%>
 <%@page import="ModeloDAO.PersonaDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+  Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
+  if (usr == null) {
+      response.sendRedirect(request.getContextPath() + "/Controlador?accion=login");
+      return;
+  }
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +28,7 @@
           %>
             <h1>Modificar Persona</h1>
             <form action="Controlador" method="get" autocomplete="off">
-                <input type="hidden" name="accion" value="Actulaizar">
+                <input type="hidden" name="accion" value="Actualizar">
                 <input type="hidden" name="txtid" value="<%= p.getId()%>">
                 <label for="dpi">DPI:</label>
                 <input id="dpi" class="form-control" type="text" name="txtDpi"

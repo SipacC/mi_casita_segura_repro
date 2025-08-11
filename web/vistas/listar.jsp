@@ -2,6 +2,13 @@
 <%@page import="Modelo.Persona"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+  Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
+  if (usr == null) {
+      response.sendRedirect(request.getContextPath() + "/Controlador?accion=login");
+      return;
+  }
+%>
 <!DOCTYPE html>
 <html>
     <head>

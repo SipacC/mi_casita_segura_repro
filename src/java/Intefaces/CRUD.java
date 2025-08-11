@@ -11,4 +11,5 @@ public interface CRUD {
     public boolean add(Persona per);
     public boolean edit(Persona per);
     public boolean eliminar(int id);
+    public Persona findByCredenciales(String nom, String contrasena, String rol );
 }

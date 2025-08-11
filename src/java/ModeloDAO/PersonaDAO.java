@@ -125,4 +125,29 @@ public class PersonaDAO implements CRUD {
             return false;
         }
     }
+
+    @Override
+    public Persona findByCredenciales(String nom, String contrasena, String rol) {
+        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ? AND LOWER(rol) = LOWER(?)";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, nom);
+            ps.setString(2, contrasena);
+            ps.setString(3, rol);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                Persona per = new Persona();
+                per.setId(rs.getInt("id"));
+                per.setDpi(rs.getString("dpi"));
+                per.setNom(rs.getString("nombres"));
+                per.setRol(rs.getString("rol"));
+                return per;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en buscar por credenciales: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
