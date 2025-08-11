@@ -41,8 +41,8 @@ public class Controlador extends HttpServlet {
             throws ServletException, IOException {
         String acceso="";
         String action=request.getParameter("accion");
-        if (action == null ) {
-            action = "listar";
+        if (action == null || action.isEmpty()) {
+            action = "login";
         }
         if(action.equalsIgnoreCase("listar")){
             request.setAttribute("lista", dao.listar());

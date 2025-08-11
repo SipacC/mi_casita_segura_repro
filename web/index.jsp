@@ -11,7 +11,7 @@
         <br>
         <br>
         <div class="container">
-            <a class="btn btn-success btn-lg" href="Controlador?accion=listar">Listar Persona</a>
+            <a class="btn btn-success btn-lg" href="Controlador?accion=login">Iniciar sesión</a>
         </div>
     </body>
 </html>
