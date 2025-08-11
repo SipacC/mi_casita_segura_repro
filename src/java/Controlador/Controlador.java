@@ -101,7 +101,7 @@ public class Controlador extends HttpServlet {
         else if (action.equalsIgnoreCase("login")) {
             acceso = "vistas/login.jsp";
         }
-        else if (action.equalsIgnoreCase("valida")) {
+        else if (action.equalsIgnoreCase("validar")) {
             String nom = request.getParameter("nom");
             String contrasena = request.getParameter("contrasena");
             String rol = request.getParameter("rol");
@@ -118,6 +118,12 @@ public class Controlador extends HttpServlet {
         }
         else if (action.equalsIgnoreCase("logout")) {
             request.getSession().invalidate();
+            response.sendRedirect("Controlador?accion=login");
+            return;
+        }
+        
+        if (request.getSession().getAttribute("usuario") == null 
+                  && !(action.equalsIgnoreCase("login") || action.equalsIgnoreCase("validar"))) {
             response.sendRedirect("Controlador?accion=login");
             return;
         }

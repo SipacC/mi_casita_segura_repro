@@ -1,10 +1,3 @@
-<%-- 
-    Document   : add
-    Created on : 30-ago-2018, 19:58:16
-    Author     : Joel
-    Modified   : josema manuel
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
   Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
