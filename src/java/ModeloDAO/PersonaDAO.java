@@ -127,27 +127,29 @@ public class PersonaDAO implements CRUD {
     }
 
     @Override
-    public Persona findByCredenciales(String nom, String contrasena, String rol) {
-        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ? AND LOWER(rol) = LOWER(?)";
+    public Persona findByLogin(String nom, String contrasena) {
+        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ?";//sentencia para valida usuario
+
         try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nom);
-            ps.setString(2, contrasena);
-            ps.setString(3, rol);
-            rs = ps.executeQuery();
-            if (rs.next()){
+            con = cn.getConnection();               // Conexión a la BD
+            ps = con.prepareStatement(sql);         // Prepara consulta segura
+            ps.setString(1, nom);                    // Nombre de usuario
+            ps.setString(2, contrasena);             // Contraseña
+            rs = ps.executeQuery();                  // Ejecuta consulta
+
+            if (rs.next()) {
+                // Si se encontró usuario, crear objeto Persona con los datos
                 Persona per = new Persona();
                 per.setId(rs.getInt("id"));
                 per.setDpi(rs.getString("dpi"));
                 per.setNom(rs.getString("nombres"));
                 per.setRol(rs.getString("rol"));
-                return per;
+                return per; // Devuelve el usuario encontrado
             }
         } catch (Exception e) {
-            System.err.println("Error en buscar por credenciales: " + e.getLocalizedMessage());
+            System.err.println("Error en findByLogin: " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return null; // Si no encontró usuario, devuelve null
     }
 }

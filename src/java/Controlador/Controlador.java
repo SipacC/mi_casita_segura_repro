@@ -16,8 +16,8 @@ public class Controlador extends HttpServlet {
     String listar="vistas/listar.jsp";
     String add="vistas/add.jsp";
     String edit="vistas/edit.jsp";
-    Persona p=new Persona();
-    PersonaDAO dao=new PersonaDAO();
+    Persona p =new Persona();
+    PersonaDAO dao =new PersonaDAO();
     int id;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,7 +62,6 @@ public class Controlador extends HttpServlet {
             dao.add(p);
             response.sendRedirect("Controlador?accion=listar");
             return;
-            //acceso=listar;
         }
         else if(action.equalsIgnoreCase("editar")){
             request.setAttribute("idper",request.getParameter("id"));
@@ -88,33 +87,16 @@ public class Controlador extends HttpServlet {
             dao.edit(p);
             response.sendRedirect("Controlador?accion=listar");
             return;
-            //acceso=listar;
         }
         else if(action.equalsIgnoreCase("eliminar")){
             id=Integer.parseInt(request.getParameter("id"));
             p.setId(id);
             dao.eliminar(id);
-            //acceso=listar;
             response.sendRedirect("Controlador?accion=listar");
             return;
         }
         else if (action.equalsIgnoreCase("login")) {
             acceso = "vistas/login.jsp";
-        }
-        else if (action.equalsIgnoreCase("validar")) {
-            String nom = request.getParameter("nom");
-            String contrasena = request.getParameter("contrasena");
-            String rol = request.getParameter("rol");
-
-            Persona usuario = dao.findByCredenciales(nom, contrasena, rol);
-            if(usuario != null) {
-                request.getSession().setAttribute("usuario", usuario);
-                response.sendRedirect("Controlador?accion=listar");
-                return;   
-            } else {
-                request.setAttribute("error", "Credenciales invalidas");
-                acceso = "vistas/login.jsp";
-            }
         }
         else if (action.equalsIgnoreCase("logout")) {
             request.getSession().invalidate();
@@ -135,13 +117,36 @@ public class Controlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+                String action = request.getParameter("accion");
+                if ("validar".equalsIgnoreCase(action)){
+                    String nom = request.getParameter("nom");
+                    String contrasena = request.getParameter("contrasena");
 
-   
+                    Persona usuario = dao.findByLogin(nom, contrasena);
+                    if (usuario != null) {
+                        request.getSession().invalidate();
+                        javax.servlet.http.HttpSession newSession = request.getSession(true);
+                        newSession.setAttribute("usuario", usuario);
+
+                        //redireccion por rol
+                        if ("administrador".equalsIgnoreCase(usuario.getRol())) {
+                            response.sendRedirect("vistas/menuAdministrador.jsp");
+                        } else {
+                            response.sendRedirect("Controlador?accion=listar");
+                        }
+                    } else {
+                        request.setAttribute("error", "Nombre o contraseña incorrectos");
+                        request.getRequestDispatcher("vistas/login.jsp").forward(request, response);      
+                    }
+                    return;
+                }
+                
+                doGet(request, response);
+            }
+
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }
