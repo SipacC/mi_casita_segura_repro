@@ -1,20 +1,17 @@
-<form action="Controlador" method="post" autocomplete="off">
-  <!-- Envia los datos al servlet Controlador usando POST -->
-  <input type="hidden" name="accion" value="validar">
-  <!-- Campo oculto que indica al servlet qué acción ejecutar -->
+<link rel="stylesheet" href="css/login.css">
 
-  <div class="mb-3">
-    <label for="nom" class="form-label">Nombre</label>
-    <input id="nom" name="nom" class="form-control" required>
-    <!-- Campo de texto para ingresar el nombre de usuario -->
-  </div>
 
-  <div class="mb-3">
-    <label for="contrasena" class="form-label">Contraseña</label>
-    <input id="contrasena" name="contrasena" type="password" class="form-control" required autocomplete="current-password">
-    <!-- Campo de contraseña -->
-  </div>
+<div class="login-container">
+    <h2>Iniciar sesion</h2>
 
-  <button class="btn btn-primary" type="submit">Entrar</button>
-  <!-- Botón para enviar el formulario -->
-</form>
+    <% if (request.getAttribute("error") != null) { %>
+        <div class="error-message"><%= request.getAttribute("error") %></div>
+    <% } %>
+
+    <form action="Controlador" method="post" autocomplete="off">
+        <input type="hidden" name="accion" value="validar">
+        <input type="text" name="nom" placeholder="Nombre de usuario" required>
+        <input type="password" name="contrasena" placeholder="Contrasena" required>
+        <button type="submit">Entrar</button>
+    </form>
+</div>

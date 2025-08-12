@@ -8,14 +8,21 @@
       return;
   }
 %>
+<link rel="stylesheet" href="../css/admin.css">
 
-<p>Bienvenido, <strong><%= usr.getNom() %></strong></p>
-<!-- Muestra el nombre del usuario logueado -->
 
-<a class="list-group-item list-group-item-action" href="../Controlador?accion=listar">
-  Mantenimiento de usuarios
-</a>
-<!-- Enlace para ir a la lista de usuarios (listar.jsp) -->
+<div class="admin-container">
+    <h2>Menu del Administrador</h2>
+    <p>Bienvenido Adminstrador, <strong><%= usr.getNom() %></strong></p>
 
-<a class="btn btn-outline-danger" href="../Controlador?accion=logout">Cerrar sesión</a>
-<!-- Enlace para cerrar sesión -->
+    <div class="list-group">
+        <a class="list-group-item" href="../Controlador?accion=listar">
+            Mantenimiento de usuarios
+        </a>
+        <a class="list-group-item" href="#">
+            Otra opcion
+        </a>
+    </div>
+
+    <a class="logout-btn" href="../Controlador?accion=logout">Cerrar sesión</a>
+</div>
