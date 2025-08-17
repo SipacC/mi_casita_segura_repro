@@ -1,0 +1,79 @@
+/* === Estilos generales === */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4a90e2, #0056b3);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+/* === Contenedor del login === */
+.login-container {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 380px;
+}
+
+/* === Título === */
+.login-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* === Campos de entrada === */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0 16px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+/* === Botón === */
+.login-container button {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
+
+/* === Mensajes de error === */
+.error-message {
+    color: red;
+    font-size: 13px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* === Adaptación a móviles === */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+}

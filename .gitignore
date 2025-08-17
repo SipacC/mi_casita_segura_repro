@@ -12,3 +12,5 @@
 *.war
 *.log
 .DS_Store
+/CRUD-MVC-JAVA/build/
+/CRUD-MVC-JAVA/nbproject/private/

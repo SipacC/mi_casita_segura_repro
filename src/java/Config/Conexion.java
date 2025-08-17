@@ -8,9 +8,10 @@ public class Conexion {
         try {
             Class.forName("org.postgresql.Driver");
             con=DriverManager.getConnection(
-                    "jdbc:postgresql://dpg-d27sspu3jp1c73fnei50-a.oregon-postgres.render.com:5432/mi_casita_segura",
-                    "admin",
-                    "u410rSBv0A4J7cosYMBmybWSN1ouZUv4"
+                    "jdbc:postgresql://localhost:5432/mi_casita_segura_local",
+
+                    "jose",
+                    "jose"
             );
             System.out.println("Conexión a PostgreSQL exitosa");
         } catch (Exception e) {

@@ -128,28 +128,28 @@ public class PersonaDAO implements CRUD {
 
     @Override
     public Persona findByLogin(String nom, String contrasena) {
-        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ?";//sentencia para valida usuario
-
+        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ?";
         try {
-            con = cn.getConnection();               // Conexión a la BD
-            ps = con.prepareStatement(sql);         // Prepara consulta segura
-            ps.setString(1, nom);                    // Nombre de usuario
-            ps.setString(2, contrasena);             // Contraseña
-            rs = ps.executeQuery();                  // Ejecuta consulta
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, nom);
+            ps.setString(2, contrasena);
+            rs = ps.executeQuery();
 
             if (rs.next()) {
-                // Si se encontró usuario, crear objeto Persona con los datos
                 Persona per = new Persona();
                 per.setId(rs.getInt("id"));
                 per.setDpi(rs.getString("dpi"));
                 per.setNom(rs.getString("nombres"));
                 per.setRol(rs.getString("rol"));
-                return per; // Devuelve el usuario encontrado
+                return per;
             }
         } catch (Exception e) {
             System.err.println("Error en findByLogin: " + e.getMessage());
             e.printStackTrace();
         }
-        return null; // Si no encontró usuario, devuelve null
+        return null;
     }
+
+
 }
