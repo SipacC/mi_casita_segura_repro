@@ -7,10 +7,13 @@ public class Persona {
     private String rol;
     private String contrasena;
 
-
+    // constructor vacion para hacer consultas y usar el get
+    //recuerda que el get es para leer obtener informacion de un atributo
     public Persona() {
     }
-
+    
+    //constructor con parametros para crear nuevos objetos, como en la base de datos
+    //el id es auto incremental no se incluye en caso contrario si
     public Persona(String dpi, String nom, String rol, String contrasena) {
         this.dpi = dpi;
         this.nom = nom;
