@@ -21,6 +21,11 @@ public class ControladorAdmin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (request.getSession(false) == null || request.getSession().getAttribute("usuario") == null) {
+        response.sendRedirect(request.getContextPath() + "/vistasLogin/login.jsp");
+        return; // detener ejecución
+    }
         String acceso = "";
         String action = request.getParameter("accion");
 
@@ -60,12 +65,6 @@ public class ControladorAdmin extends HttpServlet {
             id = Integer.parseInt(request.getParameter("id"));
             dao.eliminar(id);
             response.sendRedirect("ControladorAdmin?accion=listar");
-            return;
-        }
-
-        // Verificación de sesión
-        if (request.getSession().getAttribute("usuario") == null) {
-            response.sendRedirect("ControladorLogin?accion=login");
             return;
         }
 

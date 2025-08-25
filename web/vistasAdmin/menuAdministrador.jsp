@@ -1,28 +1,54 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-  Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
-  // Recupera de la sesión el usuario logueado
+    // ===============================
+    // Evitar que el navegador guarde esta página en caché
+    // Así, la flecha "Atrás" siempre recarga desde el servidor
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+    response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+    response.setDateHeader("Expires", 0); // Proxies
+    // ===============================
 
-  if (usr == null || !"administrador".equalsIgnoreCase(usr.getRol())) {
-      // Si no hay usuario o el rol no es administrador, redirige al login
-      response.sendRedirect(request.getContextPath() + "/ControladorLogin?accion=login");
-      return;
-  }
+    // ===============================
+    // Validar sesión y rol
+    Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
+    if (usr == null || !"administrador".equalsIgnoreCase(usr.getRol())) {
+        // Si no hay sesión o el rol no es administrador, redirige al login
+        response.sendRedirect(request.getContextPath() + "/ControladorLogin?accion=login");
+        return; // detener ejecución del JSP
+    }
+    // ===============================
 %>
-<link rel="stylesheet" href="../css/admin.css">
 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Administrador</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/admin.css">
+</head>
+<body>
 
 <div class="admin-container">
-    <h2>Menu del Administrador</h2>
-    <p>Bienvenido Adminstrador, <strong><%= usr.getNom() %></strong></p>
+    <h2>Menú del Administrador</h2>
+    <p>Bienvenido Administrador, <strong><%= usr.getNom() %></strong></p>
 
+    <!-- Opciones del menú -->
     <div class="list-group">
-        <a class="list-group-item" href="../ControladorAdmin?accion=listar">
+        <a class="list-group-item" href="<%= request.getContextPath() %>/ControladorAdmin?accion=listar">
             Mantenimiento de usuarios
         </a>
         <a class="list-group-item" href="#">
-            Otra opcion
+            Otra opción
         </a>
     </div>
 
-    <a class="logout-btn" href="../ControladorLogin?accion=logout">Cerrar sesión</a>
+    <!-- Botón de Cerrar Sesión -->
+    <!-- ===============================
+         Llama al servlet ControladorLogin con accion=logout
+         Esto destruye la sesión y redirige al login
+    =============================== -->
+    <a class="logout-btn" href="<%= request.getContextPath() %>/ControladorLogin?accion=logout">Cerrar sesión</a>
 </div>
+
+</body>
+</html>

@@ -1,3 +1,25 @@
+<%
+    // ===============================
+    // Evitar cache
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    // ===============================
+    // Si ya hay sesión activa, bloquear acceso al login
+    Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
+    if (usr != null) {
+        // Redirige según rol
+        if ("administrador".equalsIgnoreCase(usr.getRol())) {
+            response.sendRedirect(request.getContextPath() + "/vistasAdmin/menuAdministrador.jsp");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/ControladorAdmin?accion=listar");
+        }
+        return; // detener ejecución
+    }
+%>
+
+
 <link rel="stylesheet" href="css/login.css">
 
 

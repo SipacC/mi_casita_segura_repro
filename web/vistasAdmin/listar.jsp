@@ -1,3 +1,10 @@
+<%
+if (session.getAttribute("usuario") == null) {
+    // No hay sesión activa, redirige al login
+    response.sendRedirect(request.getContextPath() + "/vistasLogin/login.jsp");
+    return; // detener ejecución de la página
+}
+%>
 <%@page import="java.util.Iterator"%>
 <%@page import="Modelo.Persona"%>
 <%@page import="java.util.List"%>
@@ -20,6 +27,10 @@
         <div class="container">
             <h1>Personas</h1>
             <a class="btn btn-success" href="ControladorAdmin?accion=add">Agregar Nuevo</a>
+
+            <a href="${pageContext.request.contextPath}/vistasAdmin/menuAdministrador.jsp" class="btn btn-primary">
+        Regresar al Menú
+    </a>
             <br><br>
             <table class="table table-bordered">
                 <thead>
