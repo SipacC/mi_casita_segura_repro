@@ -37,10 +37,10 @@ public class ControladorLogin extends HttpServlet {
 
         String action = request.getParameter("accion");
         if ("validar".equalsIgnoreCase(action)) {
-            String nom = request.getParameter("nom");
+            String usuarioParam = request.getParameter("usuario");
             String contrasena = request.getParameter("contrasena");
 
-            Persona usuario = dao.findByLogin(nom, contrasena);
+            Persona usuario = dao.findByLogin(usuarioParam, contrasena);
             if (usuario != null) {
                 request.getSession().invalidate();
                 javax.servlet.http.HttpSession newSession = request.getSession(true);

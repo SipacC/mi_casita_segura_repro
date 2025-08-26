@@ -23,9 +23,10 @@ public class ControladorAdmin extends HttpServlet {
             throws ServletException, IOException {
 
         if (request.getSession(false) == null || request.getSession().getAttribute("usuario") == null) {
-        response.sendRedirect(request.getContextPath() + "/vistasLogin/login.jsp");
-        return; // detener ejecución
-    }
+            response.sendRedirect(request.getContextPath() + "/vistasLogin/login.jsp");
+            return; // detener ejecución
+        }
+
         String acceso = "";
         String action = request.getParameter("accion");
 
@@ -41,7 +42,7 @@ public class ControladorAdmin extends HttpServlet {
             acceso = add;
         } else if (action.equalsIgnoreCase("Agregar")) {
             p.setDpi(request.getParameter("txtDpi"));
-            p.setNom(request.getParameter("txtNom"));
+            p.setNombres(request.getParameter("txtNombres")); // cambiado
             p.setRol(request.getParameter("txtRol"));
             p.setContrasena(request.getParameter("txtContrasena"));
             dao.add(p);
@@ -52,9 +53,9 @@ public class ControladorAdmin extends HttpServlet {
             acceso = edit;
         } else if (action.equalsIgnoreCase("Actualizar")) {
             id = Integer.parseInt(request.getParameter("txtid"));
-            p.setId(id);
+            p.setId_usuario(id); // cambiado
             p.setDpi(request.getParameter("txtDpi"));
-            p.setNom(request.getParameter("txtNom"));
+            p.setNombres(request.getParameter("txtNombres")); // cambiado
             p.setRol(request.getParameter("txtRol"));
             String contrasena = request.getParameter("txtContrasena");
             p.setContrasena((contrasena != null && !contrasena.trim().isEmpty()) ? contrasena : null);

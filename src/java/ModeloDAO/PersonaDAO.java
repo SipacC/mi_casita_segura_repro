@@ -7,122 +7,155 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class PersonaDAO implements CRUD {// la clase Persona implementa los metodos de la interfaz crud
-    Conexion cn = new Conexion(); // objeto para manejar la base de datos, instancia a la clase conexion
-    //variables JDBC reutilizables para las conexiones, consultas
-    Connection con; //representa la conexion a la base de datos
-    PreparedStatement ps; // representa una consulta AQL precompilada
-    ResultSet rs;//contiene el resultado de una consulta
+public class PersonaDAO implements CRUD {
+    Conexion cn = new Conexion();
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
 
     @Override
     public List<Persona> listar() {
-        // Lista que almacenará todos los registros de la tabla persona
         List<Persona> list = new ArrayList<>();
-        // Consulta SQL para obtener todos los campos de la tabla persona
-        String sql = "SELECT id, dpi, nombres, rol, contrasena FROM persona";
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios";
         try {
-            con = cn.getConnection();//habre la conexion a la base de datos
-            ps = con.prepareStatement(sql);//prepara la consulta sql
-            rs = ps.executeQuery();// ejecuta la consulta y obtiene los resultados, los datos
-            while (rs.next()) {//recorre todos los resultados
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 Persona per = new Persona();
-                per.setId(rs.getInt("id"));
+                per.setId_usuario(rs.getInt("id_usuario"));
                 per.setDpi(rs.getString("dpi"));
-                per.setNom(rs.getString("nombres"));
+                per.setNombres(rs.getString("nombres"));
+                per.setUsuario(rs.getString("usuario"));
                 per.setRol(rs.getString("rol"));
                 per.setContrasena(rs.getString("contrasena"));
+                per.setCorreo(rs.getString("correo"));
+                per.setLote(rs.getString("lote"));
+                per.setNumero_casa(rs.getString("numero_casa"));
+                per.setEstado(rs.getString("estado"));
                 list.add(per);
             }
         } catch (Exception e) {
-            //imprime en consola si hay algun problema
             System.err.println("Error en listar(): " + e.getMessage());
             e.printStackTrace();
         }
-        return list;//devuelve la lista completa de personas
+        return list;
     }
 
     @Override
     public Persona list(int id) {
-        String sql = "SELECT id, dpi, nombres, rol, contrasena FROM persona WHERE id = ?";
-        Persona per = null; // Objeto Persona que devolverá el método
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios WHERE id_usuario = ?";
+        Persona per = null;
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, id);// Asignar parámetro ID
-            rs = ps.executeQuery();// Ejecutar consult
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
 
-            if (rs.next()) {// Si hay resultado, crear objeto Persona y asignar valores
+            if (rs.next()) {
                 per = new Persona();
-                per.setId(rs.getInt("id"));
+                per.setId_usuario(rs.getInt("id_usuario"));
                 per.setDpi(rs.getString("dpi"));
-                per.setNom(rs.getString("nombres"));
+                per.setNombres(rs.getString("nombres"));
+                per.setUsuario(rs.getString("usuario"));
                 per.setRol(rs.getString("rol"));
                 per.setContrasena(rs.getString("contrasena"));
+                per.setCorreo(rs.getString("correo"));
+                per.setLote(rs.getString("lote"));
+                per.setNumero_casa(rs.getString("numero_casa"));
+                per.setEstado(rs.getString("estado"));
             }
         } catch (Exception e) {
-            System.err.println(" Error en list(id): " + e.getMessage());
+            System.err.println("Error en list(id): " + e.getMessage());
             e.printStackTrace();
         }
-        return per;// Devolver el objeto Persona encontrado o null si no existe
-
+        return per;
     }
 
     @Override
     public boolean add(Persona per) {
-        //consulta sql para un nuevo registro
-        String sql = "INSERT INTO persona(dpi, nombres, rol, contrasena) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios(dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            con = cn.getConnection(); //abre la conexion
-            ps = con.prepareStatement(sql);// prepara la consulta
-            ps.setString(1, per.getDpi());//asigna el dpi
-            ps.setString(2, per.getNom());//asigna el nombre
-            ps.setString(3, per.getRol());//asigna el rol
-            ps.setString(4, per.getContrasena());// asigna la contrasena
-            // Ejecutar la inserción, devuelve true si se insertó al menos 1 fila
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, per.getDpi());
+            ps.setString(2, per.getNombres());
+            ps.setString(3, per.getUsuario());
+            ps.setString(4, per.getRol());
+            ps.setString(5, per.getContrasena());
+            ps.setString(6, per.getCorreo());
+            ps.setString(7, per.getLote());
+            ps.setString(8, per.getNumero_casa());
+            ps.setString(9, per.getEstado());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             System.err.println("Error en add(): " + e.getMessage());
-            e.printStackTrace();
-            return false;// Devuelve false si ocurre algún error
-        }
-    }
-
-    @Override
-    public boolean edit(Persona per) {
-        try {
-            con = cn.getConnection();// Abrir conexión
-
-            // Si la contraseña está vacía, no actualizarla
-            if (per.getContrasena() == null || per.getContrasena().trim().isEmpty()) {
-                String sql = "UPDATE persona SET dpi = ?, nombres = ?, rol = ? WHERE id = ?";
-                ps = con.prepareStatement(sql);
-                ps.setString(1, per.getDpi());
-                ps.setString(2, per.getNom());
-                ps.setString(3, per.getRol());
-                ps.setInt(4, per.getId());
-            } else {
-                // Si la contraseña se proporciona, actualizar también ese campo
-                String sql = "UPDATE persona SET dpi = ?, nombres = ?, rol = ?, contrasena = ? WHERE id = ?";
-                ps = con.prepareStatement(sql);
-                ps.setString(1, per.getDpi());
-                ps.setString(2, per.getNom());
-                ps.setString(3, per.getRol());
-                ps.setString(4, per.getContrasena());
-                ps.setInt(5, per.getId());
-            }
-            return ps.executeUpdate() > 0;// Retorna true si la actualización tuvo efecto
-        } catch (Exception e) {
-            System.err.println("Error en edit(): " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
     @Override
+public boolean edit(Persona per) {
+    try {
+        con = cn.getConnection();
+
+        Map<String, Object> campos = new LinkedHashMap<>();
+        campos.put("dpi", per.getDpi());
+        campos.put("nombres", per.getNombres());
+        campos.put("usuario", per.getUsuario());
+        campos.put("rol", per.getRol());
+        campos.put("contrasena", per.getContrasena());
+        campos.put("correo", per.getCorreo());
+        campos.put("lote", per.getLote());
+        campos.put("numero_casa", per.getNumero_casa());
+        campos.put("estado", per.getEstado());
+
+        StringBuilder sql = new StringBuilder("UPDATE usuarios SET ");
+        List<Object> params = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : campos.entrySet()) {
+            Object valor = entry.getValue();
+            if (valor != null && !valor.toString().trim().isEmpty()) {
+                sql.append(entry.getKey()).append(" = ?, ");
+                params.add(valor);
+            }
+        }
+
+        if (params.isEmpty()) {
+            // No hay campos para actualizar
+            return false;
+        }
+
+        // Quitar última coma y espacio
+        sql.setLength(sql.length() - 2);
+
+        // Agregar condición WHERE
+        sql.append(" WHERE id_usuario = ?");
+        params.add(per.getId_usuario());
+
+        ps = con.prepareStatement(sql.toString());
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+
+        return ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        System.err.println("Error en edit(): " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+
+    @Override
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM persona WHERE id = ?";
+        String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
@@ -136,29 +169,32 @@ public class PersonaDAO implements CRUD {// la clase Persona implementa los meto
     }
 
     @Override
-    public Persona findByLogin(String nom, String contrasena) {
-        String sql = "SELECT id, dpi, nombres, rol FROM persona WHERE nombres = ? AND contrasena = ?";
+    public Persona findByLogin(String usuario, String contrasena) {
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado FROM usuarios WHERE usuario = ? AND contrasena = ?";
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, nom);// Asignar nombre de usuario
-            ps.setString(2, contrasena);// Asignar contraseña
-            rs = ps.executeQuery();// Asignar contraseña
+            ps.setString(1, usuario);
+            ps.setString(2, contrasena);
+            rs = ps.executeQuery();
 
-            if (rs.next()) {// Si se encuentra usuario
+            if (rs.next()) {
                 Persona per = new Persona();
-                per.setId(rs.getInt("id"));// Asignar ID
-                per.setDpi(rs.getString("dpi"));// Asignar dpi
-                per.setNom(rs.getString("nombres"));// Asignar nombre
-                per.setRol(rs.getString("rol"));// Asignar rol
-                return per;// Devolver usuario encontrado
+                per.setId_usuario(rs.getInt("id_usuario"));
+                per.setDpi(rs.getString("dpi"));
+                per.setNombres(rs.getString("nombres"));
+                per.setUsuario(rs.getString("usuario"));
+                per.setRol(rs.getString("rol"));
+                per.setCorreo(rs.getString("correo"));
+                per.setLote(rs.getString("lote"));
+                per.setNumero_casa(rs.getString("numero_casa"));
+                per.setEstado(rs.getString("estado"));
+                return per;
             }
         } catch (Exception e) {
             System.err.println("Error en findByLogin: " + e.getMessage());
             e.printStackTrace();
         }
-        return null;// Retorna null si no se encuentra usuario
+        return null;
     }
-
-
 }
