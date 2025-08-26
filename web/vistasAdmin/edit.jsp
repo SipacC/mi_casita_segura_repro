@@ -32,16 +32,20 @@
             <input type="hidden" name="txtid" value="<%= p.getId_usuario() %>">
 
             <label for="dpi">DPI:</label>
-            <input id="dpi" class="form-control mb-2" type="text" name="txtDpi" value="<%= p.getDpi() %>" required>
+            <input id="dpi" class="form-control mb-2" type="text" name="txtDpi" 
+            value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="nombres">Nombres:</label>
-            <input id="nombres" class="form-control mb-2" type="text" name="txtNom" value="<%= p.getNombres() %>" required>
+            <input id="nombres" class="form-control mb-2" type="text" name="txtNom"
+             value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="usuario">Usuario:</label>
-            <input id="usuario" class="form-control mb-2" type="text" name="txtUsuario" value="<%= p.getUsuario() %>" required>
+            <input id="usuario" class="form-control mb-2" type="text" name="txtUsuario"
+             value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="correo">Correo:</label>
-            <input id="correo" class="form-control mb-2" type="email" name="txtCorreo" value="<%= p.getCorreo() %>" required>
+            <input id="correo" class="form-control mb-2" type="email" name="txtCorreo"
+             value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="rol">Rol:</label>
             <select id="rol" class="form-control mb-2" name="txtRol" required>
@@ -52,10 +56,12 @@
             </select>
 
             <label for="lote">Lote:</label>
-            <input id="lote" class="form-control mb-2" type="text" name="txtLote" value="<%= p.getLote() %>">
+            <input id="lote" class="form-control mb-2" type="text" name="txtLote"
+             value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="numeroCasa">No. Casa:</label>
-            <input id="numeroCasa" class="form-control mb-2" type="text" name="txtNumeroCasa" value="<%= p.getNumero_casa() %>">
+            <input id="numeroCasa" class="form-control mb-2" type="text" name="txtNumeroCasa" 
+            value="" placeholder="Deja en blanco para mantener el actual">
 
             <label for="estado">Estado:</label>
             <select id="estado" class="form-control mb-2" name="txtEstado" required>

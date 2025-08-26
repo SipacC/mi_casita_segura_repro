@@ -1,0 +1,85 @@
+/* === Estilos generales === */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Contenedor principal === */
+.admin-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* === Título === */
+.admin-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.admin-container p {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* === Lista de opciones === */
+.list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-group-item {
+    display: block;
+    padding: 12px 16px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    color: #333;
+    font-size: 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* === Botón de cerrar sesión === */
+.logout-btn {
+    display: inline-block;
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background-color: #a71d2a;
+}
+
+/* === Adaptación móvil === */
+@media (max-width: 600px) {
+    .admin-container {
+        padding: 20px;
+    }
+    .list-group-item {
+        font-size: 14px;
+    }
+}

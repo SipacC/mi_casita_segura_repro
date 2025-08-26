@@ -1,0 +1,35 @@
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+    <!-- Nuevo servlet para login -->
+    <servlet>
+        <servlet-name>ControladorLogin</servlet-name>
+        <servlet-class>Controlador.ControladorLogin</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControladorLogin</servlet-name>
+        <url-pattern>/ControladorLogin</url-pattern>
+    </servlet-mapping>
+
+    <!-- Nuevo servlet para CRUD/admin -->
+    <servlet>
+        <servlet-name>ControladorAdmin</servlet-name>
+        <servlet-class>Controlador.ControladorAdmin</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControladorAdmin</servlet-name>
+        <url-pattern>/ControladorAdmin</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!-- Página inicial -->
+    <welcome-file-list>
+        <welcome-file>ControladorLogin</welcome-file>
+    </welcome-file-list>
+
+</web-app>

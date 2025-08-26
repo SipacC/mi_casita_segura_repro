@@ -3,6 +3,9 @@ package Controlador;
 import Modelo.Persona;
 import ModeloDAO.PersonaDAO;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,8 +45,13 @@ public class ControladorAdmin extends HttpServlet {
             acceso = add;
         } else if (action.equalsIgnoreCase("Agregar")) {
             p.setDpi(request.getParameter("txtDpi"));
-            p.setNombres(request.getParameter("txtNombres")); // cambiado
+            p.setNombres(request.getParameter("txtNombres"));
+            p.setUsuario(request.getParameter("txtUsuario"));
+            p.setCorreo(request.getParameter("txtCorreo"));
             p.setRol(request.getParameter("txtRol"));
+            p.setLote(request.getParameter("txtLote"));
+            p.setNumero_casa(request.getParameter("txtNumeroCasa"));
+            p.setEstado(request.getParameter("txtEstado"));
             p.setContrasena(request.getParameter("txtContrasena"));
             dao.add(p);
             response.sendRedirect("ControladorAdmin?accion=listar");
@@ -53,12 +61,26 @@ public class ControladorAdmin extends HttpServlet {
             acceso = edit;
         } else if (action.equalsIgnoreCase("Actualizar")) {
             id = Integer.parseInt(request.getParameter("txtid"));
-            p.setId_usuario(id); // cambiado
-            p.setDpi(request.getParameter("txtDpi"));
-            p.setNombres(request.getParameter("txtNombres")); // cambiado
-            p.setRol(request.getParameter("txtRol"));
-            String contrasena = request.getParameter("txtContrasena");
-            p.setContrasena((contrasena != null && !contrasena.trim().isEmpty()) ? contrasena : null);
+            p.setId_usuario(id);
+
+            Map<String, java.util.function.Consumer<String>> setters = new LinkedHashMap<>();
+            setters.put("txtDpi", valor -> p.setDpi(valor));
+            setters.put("txtNombres", valor -> p.setNombres(valor));
+            setters.put("txtUsuario", valor -> p.setUsuario(valor));
+            setters.put("txtCorreo", valor -> p.setCorreo(valor));
+            setters.put("txtRol", valor -> p.setRol(valor));
+            setters.put("txtLote", valor -> p.setLote(valor));
+            setters.put("txtNumeroCasa", valor -> p.setNumero_casa(valor));
+            setters.put("txtEstado", valor -> p.setEstado(valor));
+            setters.put("txtContrasena", valor -> p.setContrasena(valor));
+
+            for (Map.Entry<String, java.util.function.Consumer<String>> entry : setters.entrySet()) {
+                String valor = request.getParameter(entry.getKey());
+                if (valor != null && !valor.trim().isEmpty()) {
+                    entry.getValue().accept(valor);
+                }
+            }
+
             dao.edit(p);
             response.sendRedirect("ControladorAdmin?accion=listar");
             return;
