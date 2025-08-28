@@ -2,6 +2,7 @@ package Controlador;
 
 import Modelo.Persona;
 import ModeloDAO.PersonaDAO;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class ControladorAdmin extends HttpServlet {
     String listar = "vistasAdmin/listar.jsp";
     String add = "vistasAdmin/add.jsp";
     String edit = "vistasAdmin/edit.jsp";
+    String menuCamaras = "vistasAdmin/menuCamaras.jsp"; // 🔹 agregado
     Persona p = new Persona();
     PersonaDAO dao = new PersonaDAO();
     int id;
@@ -64,13 +66,13 @@ public class ControladorAdmin extends HttpServlet {
                 p.setEstado(request.getParameter("txtEstado"));
                 p.setContrasena(request.getParameter("txtContrasena"));
 
-                 int idNuevo = dao.add(p);
+                int idNuevo = dao.add(p);
 
-                 if (idNuevo > 0) {
-            System.out.println("✅ Usuario creado con ID " + idNuevo + " y QR generado.");
-        } else {
-            System.err.println("❌ Error al crear el usuario y generar QR.");
-        }
+                if (idNuevo > 0) {
+                    System.out.println("✅ Usuario creado con ID " + idNuevo + " y QR generado.");
+                } else {
+                    System.err.println("❌ Error al crear el usuario y generar QR.");
+                }
                 response.sendRedirect("ControladorAdmin?accion=listar");
                 return;
             }
@@ -120,6 +122,9 @@ public class ControladorAdmin extends HttpServlet {
             dao.eliminar(id);
             response.sendRedirect("ControladorAdmin?accion=listar");
             return;
+
+        } else if (action.equalsIgnoreCase("menuCamaras")) { // 🔹 nuevo caso
+            acceso = menuCamaras;
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(acceso);
