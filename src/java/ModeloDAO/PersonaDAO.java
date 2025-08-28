@@ -77,11 +77,11 @@ public class PersonaDAO implements CRUD {
     }
 
     @Override
-    public boolean add(Persona per) {
+    public int add(Persona per) {
         String sql = "INSERT INTO usuarios(dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             con = cn.getConnection();
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, per.getDpi());
             ps.setString(2, per.getNombres());
             ps.setString(3, per.getUsuario());
@@ -91,12 +91,41 @@ public class PersonaDAO implements CRUD {
             ps.setString(7, per.getLote());
             ps.setString(8, per.getNumero_casa());
             ps.setString(9, per.getEstado());
-            return ps.executeUpdate() > 0;
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int idUsuario =rs.getInt(1);
+                    //genera el codigo eleatorio
+                    String codigoQR = Gestion_qr.CrearCodigo.generarCodigo();
+                    //Generar el qr en disco
+                    String rutaQR = Gestion_qr.CrearQr.generarQR(idUsuario, codigoQR);
+                    //inserta en qr_usuario y acceso_usuario
+                    Gestion_qr.RegistrarQrAcceso registrar = new Gestion_qr.RegistrarQrAcceso();
+                    int idQrUsuario = registrar.registrarQrYAcceso(idUsuario, codigoQR, per.getRol());
+                    //enviar correo al usuario + qr solo si todo salio bien
+                    if (idQrUsuario > 0){
+                        Gestion_qr.correoEnviarQr correo = new Gestion_qr.correoEnviarQr();
+                        correo.enviarConQR(
+                        per.getCorreo(),
+                        per.getNombres(),
+                        rutaQR);
+                    }
+                    
+                    
+
+                    System.out.println("✅ Usuario creado con ID " + idUsuario);
+                    System.out.println("✅ QR generado en: " + rutaQR);
+                    return idUsuario;
+                }                
+            }
         } catch (Exception e) {
-            System.err.println("Error en add(): " + e.getMessage());
+            System.err.println("Error en add():"+ e.getMessage());
             e.printStackTrace();
-            return false;
         }
+        return -1;
     }
 
     @Override
@@ -197,4 +226,41 @@ public boolean edit(Persona per) {
         }
         return null;
     }
+
+    public boolean existeUsuarioOCorreo(String usuario, String correo) {
+    String sql = "SELECT COUNT(*) FROM Usuarios WHERE usuario = ? OR correo = ?";
+    try {
+        con = cn.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setString(1, usuario);
+        ps.setString(2, correo);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // true si existe
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+public boolean existeUsuarioOCorreoEdit(String usuario, String correo, int id) {
+    String sql = "SELECT COUNT(*) FROM Usuarios WHERE (usuario = ? OR correo = ?) AND id_usuario <> ?";
+    try {
+        con = cn.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setString(1, usuario);
+        ps.setString(2, correo);
+        ps.setInt(3, id);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+
 }
