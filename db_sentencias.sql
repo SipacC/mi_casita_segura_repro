@@ -1,22 +1,27 @@
---tabla  usuario
+-- ==========================
+-- TABLA USUARIOS
+-- ==========================
 CREATE TABLE Usuarios (
     id_usuario SERIAL PRIMARY KEY,
     dpi VARCHAR(13),
     nombres VARCHAR(40),
-    usuario VARCHAR(15) UNIQUE,
-    correo VARCHAR(100) UNIQUE,
+    usuario VARCHAR(15),
+    correo VARCHAR(100),
     contrasena VARCHAR(100),
-    rol VARCHAR(20) CHECK (rol IN ('residente', 'administrador', 'seguridad')),
+    rol VARCHAR(20),
     lote VARCHAR(20),
     numero_casa VARCHAR(10),
-    estado VARCHAR(20) DEFAULT 'activo' -- activo/inactivo
+    estado VARCHAR(20) DEFAULT 'activo',
+    CONSTRAINT chk_rol CHECK (rol IN ('residente', 'administrador', 'seguridad'))
 );
 
---tabla tajeta
+-- ==========================
+-- TABLA TARJETA
+-- ==========================
 CREATE TABLE tarjeta (
     id_tarjeta SERIAL PRIMARY KEY,
-    id_usuario INTEGER REFERENCES Usuarios(id_usuario),
-    numero_tarjeta VARCHAR(20) UNIQUE,
+    id_usuario INTEGER REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
+    numero_tarjeta VARCHAR(20), -- QUITADO UNIQUE
     fecha_vencimiento DATE,
     cvv VARCHAR(4),
     nombre_titular VARCHAR(100),
@@ -24,10 +29,12 @@ CREATE TABLE tarjeta (
     saldo DECIMAL(10,2)
 );
 
---tabla pagos
+-- ==========================
+-- TABLA PAGOS
+-- ==========================
 CREATE TABLE Pago (
     id_pago SERIAL PRIMARY KEY,
-    id_usuario INTEGER REFERENCES Usuarios(id_usuario),
+    id_usuario INTEGER REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     tipo_pago VARCHAR(30),
     metodo_pago VARCHAR(30),
     fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -36,67 +43,108 @@ CREATE TABLE Pago (
     observaciones TEXT
 );
 
---qr_usuarios
+-- ==========================
+-- TABLA QR_USUARIO
+-- ==========================
 CREATE TABLE qr_usuario (
     id_qr_usuario SERIAL PRIMARY KEY,
-    codigo_qr_usuario VARCHAR(100) UNIQUE,
-    id_usuario INTEGER REFERENCES Usuarios(id_usuario),
+    codigo_qr_usuario VARCHAR(100), -- QUITADO UNIQUE
+    id_usuario INTEGER REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     fecha_hora_generada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo VARCHAR(30),
     estado VARCHAR(20) DEFAULT 'activo'
 );
---tabla accesos suario
+
+-- ==========================
+-- TABLA ACCESO_USUARIO
+-- ==========================
 CREATE TABLE acceso_usuario (
     id_acceso SERIAL PRIMARY KEY,
-    id_qr_usuario INTEGER REFERENCES qr_usuario(id_qr_usuario),
+    id_qr_usuario INTEGER REFERENCES qr_usuario(id_qr_usuario) ON DELETE CASCADE,
     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo VARCHAR(30),
     resultado VARCHAR(30),
     estado VARCHAR(20) DEFAULT 'activo'
 );
---notificaciones usuario general: 
+
+-- ==========================
+-- TABLA NOTIFICACIONES
+-- ==========================
 CREATE TABLE Notificaciones (
     id_notificaciones SERIAL PRIMARY KEY,
-    id_usuario INTEGER REFERENCES Usuarios(id_usuario),
+    id_usuario INTEGER REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     asunto VARCHAR(100),
     mensaje TEXT,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo_evento VARCHAR(50)
 );
---visita
-CREATE TABLE vista (
+
+-- ==========================
+-- TABLA VISITA
+-- ==========================
+CREATE TABLE visita (
     id_visita SERIAL PRIMARY KEY,
-    id_usuario INTEGER REFERENCES Usuarios(id_usuario),
+    id_usuario INTEGER REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     dpi_visita VARCHAR(13),
     nombre VARCHAR(100),
     tipo_visita VARCHAR(30),
     correo_visita VARCHAR(100)
 );
 
--- qr visita
+-- ==========================
+-- TABLA QR_VISITA
+-- ==========================
 CREATE TABLE qr_visita (
     id_qr_visita SERIAL PRIMARY KEY,
-    id_visita INTEGER REFERENCES vista(id_visita),
-    codigo_qr_visita VARCHAR(100) UNIQUE,
+    id_visita INTEGER REFERENCES visita(id_visita) ON DELETE CASCADE,
+    codigo_qr_visita VARCHAR(100), -- QUITADO UNIQUE
     fecha_hora_generada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     numero_accesos INTEGER DEFAULT 0
 );
---acceso visita: 
+
+-- ==========================
+-- TABLA ACCESO_VISITA
+-- ==========================
 CREATE TABLE acceso_visita (
     id_acceso_visita SERIAL PRIMARY KEY,
-    id_qr_visita INTEGER REFERENCES qr_visita(id_qr_visita),
+    id_qr_visita INTEGER REFERENCES qr_visita(id_qr_visita) ON DELETE CASCADE,
     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo VARCHAR(30),
     resultado VARCHAR(30),
     estado VARCHAR(20) DEFAULT 'activo'
 );
 
+-- ==========================
+-- TABLA NOTIFICACIONES_VISITA
+-- ==========================
 CREATE TABLE notificaciones_visita (
     id_notificaciones_visita SERIAL PRIMARY KEY,
-    id_visita INTEGER REFERENCES vista(id_visita),
+    id_visita INTEGER REFERENCES visita(id_visita) ON DELETE CASCADE,
     asunto VARCHAR(100),
     mensaje TEXT,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo_evento VARCHAR(50)
 );
 
+
+INSERT INTO Usuarios (
+    dpi, 
+    nombres, 
+    usuario, 
+    correo, 
+    contrasena, 
+    rol, 
+    lote, 
+    numero_casa, 
+    estado
+) VALUES (
+    '1234567890123',
+    'jose manuel',                 
+    'josema',                     
+    'sipacchuquiejj@gmail.com',
+    '123',              -- contrasena 
+    'administrador',                 
+    'Lote 5',                     
+    '12-A',                      
+    'activo'                     
+);

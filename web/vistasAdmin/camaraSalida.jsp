@@ -22,7 +22,8 @@
     <div id="reader"></div>
 
     <script>
-        let socket = new WebSocket("ws://192.168.1.9:8080/CRUD-MVC-JAVA/qrSocket");
+        let host = window.location.hostname; 
+        let socket = new WebSocket("ws://" + host + ":8080/CRUD-MVC-JAVA/qrSocket");
 
         socket.onopen = () => console.log("✅ Conectado a WebSocket (Salida)");
 

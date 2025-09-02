@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html>
-<head>
++<head>
     <meta charset="UTF-8">
     <title>Cámara Entrada</title>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -22,35 +22,45 @@
     <div id="reader"></div>
 
     <script>
-        // Conexión WebSocket (ajusta IP de tu servidor)
-        let socket = new WebSocket("ws://192.168.1.9:8080/CRUD-MVC-JAVA/qrSocket");
+    let host = window.location.hostname; 
+    let socket = new WebSocket("ws://" + host + ":8080/CRUD-MVC-JAVA/qrSocket");
 
-        socket.onopen = () => console.log("✅ Conectado a WebSocket (Entrada)");
+    socket.onopen = () => console.log("✅ Conectado a WebSocket (Entrada)");
 
-        socket.onmessage = (event) => {
-            let data = JSON.parse(event.data);
-            if (data.resultado === "valido") {
-                alert("✅ Entrada permitida: " + data.usuario);
-            } else if (data.resultado === "invalido") {
-                alert("❌ QR inválido en entrada");
-                new Audio("<%= request.getContextPath() %>/audio/mostrar_qr.mp3").play();
-            } else {
-                alert("⚠️ Error en validación del QR");
-            }
-        };
-
-        socket.onerror = (error) => console.error("⚠️ Error WebSocket:", error);
-        socket.onclose = () => console.log("❌ WebSocket cerrado");
-
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log(`QR detectado: ${decodedText}`);
-            // Mandamos al servidor con tipo=entrada
-            socket.send("tipo:entrada;" + decodedText);
+    socket.onmessage = (event) => {
+        let data = JSON.parse(event.data);
+        if (data.resultado === "valido") {
+            alert("✅ Entrada permitida: " + data.usuario);
+        } else if (data.resultado === "invalido") {
+            alert("❌ QR inválido en entrada");
+            new Audio("<%= request.getContextPath() %>/audio/mostrar_qr.mp3").play();
+        } else if (data.resultado === "duplicado") {
+            console.log("⚠️ QR duplicado ignorado en cliente");
+        } else {
+            alert("⚠️ Error en validación del QR");
         }
+    };
 
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess);
-    </script>
+    let ultimoQR = "";
+    let tiempoUltimo = 0;
+
+    function onScanSuccess(decodedText, decodedResult) {
+        let ahora = Date.now();
+        if (decodedText === ultimoQR && (ahora - tiempoUltimo) < 2000) {
+            console.log("⚠️ QR repetido ignorado en cliente:", decodedText);
+            return;
+        }
+        ultimoQR = decodedText;
+        tiempoUltimo = ahora;
+
+        console.log(`QR detectado: ${decodedText}`);
+        socket.send("tipo:entrada;" + decodedText);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+</script>
+
 
     <br>
     <a class="btn btn-secondary" href="<%= request.getContextPath() %>/vistasAdmin/menuCamaras.jsp">
