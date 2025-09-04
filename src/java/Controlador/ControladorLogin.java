@@ -23,14 +23,16 @@ public class ControladorLogin extends HttpServlet {
         }
 
         if (action.equalsIgnoreCase("login")) {
-            // Modificado: apunta a la nueva carpeta de vistas
+            // Redirige al login.jsp
             RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
             vista.forward(request, response);
+
         } else if (action.equalsIgnoreCase("logout")) {
             javax.servlet.http.HttpSession s = request.getSession(false);
             if (s != null) {
                 Persona u = (Persona) s.getAttribute("usuario");
                 if (u != null) {
+                    // ✅ Registrar cierre de sesión
                     new BitacoraDAO().registrarAccion(u.getId_usuario(), "Cierre de sesión", "Login");
                 }
                 s.invalidate();
@@ -54,16 +56,34 @@ public class ControladorLogin extends HttpServlet {
                 javax.servlet.http.HttpSession newSession = request.getSession(true);
                 newSession.setAttribute("usuario", usuario);
 
+                // ✅ Registrar inicio de sesión
                 BitacoraDAO bitacoraDAO = new BitacoraDAO();
                 bitacoraDAO.registrarAccion(usuario.getId_usuario(), "Inicio de sesión", "Login");
 
-                // Redirección según rol (sin modificar lógica)
-                if ("administrador".equalsIgnoreCase(usuario.getRol())) {
-                    response.sendRedirect("vistasAdmin/menuAdministrador.jsp");
-                } else {
-                    response.sendRedirect("ControladorAdmin?accion=listar");
+                // ✅ Redirección según rol
+                String rol = usuario.getRol().toLowerCase();
+
+                switch (rol) {
+                    case "administrador":
+                        response.sendRedirect("vistasAdmin/menuAdministrador.jsp");
+                        break;
+                    case "residente":
+                        response.sendRedirect("vistasResidente/menuResidente.jsp");
+                        break;
+                    case "seguridad":
+                        response.sendRedirect("vistasSeguridad/menuSeguridad.jsp");
+                        break;
+                    default:
+                        // Rol no reconocido
+                        newSession.invalidate();
+                        request.setAttribute("error", "Rol no autorizado");
+                        RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
+                        vista.forward(request, response);
+                        break;
                 }
+
             } else {
+                // Usuario o contraseña incorrectos
                 request.setAttribute("error", "Nombre o contraseña incorrectos");
                 RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
                 vista.forward(request, response);

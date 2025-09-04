@@ -1,0 +1,56 @@
+/* residente.css */
+
+body {
+    background-color: #ede7f6; /* violeta suave */
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 25px;
+    box-shadow: 0 0 12px rgba(103, 58, 183, 0.3);
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    color: #5e35b1;
+}
+
+.list-group-item {
+    background-color: #f3e5f5;
+    border: 1px solid #ce93d8;
+    color: #6a1b9a;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+    padding: 12px 20px;
+}
+
+.list-group-item:hover {
+    background-color: #e1bee7;
+}
+
+.logout-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: #8e24aa;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #6a1b9a;
+}
