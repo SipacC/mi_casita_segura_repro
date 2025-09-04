@@ -2,6 +2,7 @@ package Controlador;
 
 import Modelo.Persona;
 import ModeloDAO.PersonaDAO;
+import ModeloDAO.BitacoraDAO;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,7 +27,14 @@ public class ControladorLogin extends HttpServlet {
             RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
             vista.forward(request, response);
         } else if (action.equalsIgnoreCase("logout")) {
-            request.getSession().invalidate();
+            javax.servlet.http.HttpSession s = request.getSession(false);
+            if (s != null) {
+                Persona u = (Persona) s.getAttribute("usuario");
+                if (u != null) {
+                    new BitacoraDAO().registrarAccion(u.getId_usuario(), "Cierre de sesión", "Login");
+                }
+                s.invalidate();
+            }
             response.sendRedirect("ControladorLogin?accion=login");
         }
     }
@@ -45,6 +53,9 @@ public class ControladorLogin extends HttpServlet {
                 request.getSession().invalidate();
                 javax.servlet.http.HttpSession newSession = request.getSession(true);
                 newSession.setAttribute("usuario", usuario);
+
+                BitacoraDAO bitacoraDAO = new BitacoraDAO();
+                bitacoraDAO.registrarAccion(usuario.getId_usuario(), "Inicio de sesión", "Login");
 
                 // Redirección según rol (sin modificar lógica)
                 if ("administrador".equalsIgnoreCase(usuario.getRol())) {
