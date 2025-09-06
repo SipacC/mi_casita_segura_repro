@@ -20,7 +20,8 @@ public class PersonaDAO implements CRUD {
     @Override
     public List<Persona> listar() {
         List<Persona> list = new ArrayList<>();
-        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios";
+        //String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios";
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado, fecha_creacion FROM usuarios";
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
@@ -37,6 +38,7 @@ public class PersonaDAO implements CRUD {
                 per.setLote(rs.getString("lote"));
                 per.setNumero_casa(rs.getString("numero_casa"));
                 per.setEstado(rs.getString("estado"));
+                per.setFecha_creacion(rs.getDate("fecha_creacion"));
                 list.add(per);
             }
         } catch (Exception e) {
@@ -48,7 +50,9 @@ public class PersonaDAO implements CRUD {
 
     @Override
     public Persona list(int id) {
-        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios WHERE id_usuario = ?";
+        //String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios WHERE id_usuario = ?";
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado, fecha_creacion FROM usuarios WHERE id_usuario = ?";
+
         Persona per = null;
         try {
             con = cn.getConnection();
@@ -68,6 +72,7 @@ public class PersonaDAO implements CRUD {
                 per.setLote(rs.getString("lote"));
                 per.setNumero_casa(rs.getString("numero_casa"));
                 per.setEstado(rs.getString("estado"));
+                per.setFecha_creacion(rs.getDate("fecha_creacion"));
             }
         } catch (Exception e) {
             System.err.println("Error en list(id): " + e.getMessage());
@@ -199,7 +204,9 @@ public boolean edit(Persona per) {
 
     @Override
     public Persona findByLogin(String usuario, String contrasena) {
-        String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado FROM usuarios WHERE usuario = ? AND contrasena = ?";
+        //String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado FROM usuarios WHERE usuario = ? AND contrasena = ?";
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado, fecha_creacion FROM usuarios WHERE usuario = ? AND contrasena = ?";
+
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
@@ -218,6 +225,7 @@ public boolean edit(Persona per) {
                 per.setLote(rs.getString("lote"));
                 per.setNumero_casa(rs.getString("numero_casa"));
                 per.setEstado(rs.getString("estado"));
+                per.setFecha_creacion(rs.getDate("fecha_creacion"));
                 return per;
             }
         } catch (Exception e) {

@@ -43,6 +43,15 @@ CREATE TABLE Pago (
     observaciones TEXT
 );
 
+ALTER TABLE Pago
+ADD COLUMN estado VARCHAR(20) DEFAULT 'Pendiente';
+
+
+ALTER TABLE Pago
+ADD CONSTRAINT chk_estado_pago 
+CHECK (estado IN ('Pendiente', 'Confirmado', 'Rechazado', 'En proceso'));
+
+
 -- ==========================
 -- TABLA QR_USUARIO
 -- ==========================

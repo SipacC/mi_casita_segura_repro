@@ -11,7 +11,7 @@
     }
 %>
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Menú Residente</title>
@@ -19,16 +19,32 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/residente.css">
 </head>
 <body>
-<div class="menu-container">
-    <h2>Menú del Residente</h2>
-    <p>Bienvenido <strong><%= usr.getNombres() %></strong></p>
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center">🏠 Menú del Residente</h2>
+        <p class="text-center">Bienvenido <strong><%= usr.getNombres() %></strong></p>
 
-    <div class="list-group">
-        <a class="list-group-item" href="#">Gestionar pagos</a>
-        <a class="list-group-item" href="#">Mis notificaciones</a>
+        <div class="list-group">
+            <!-- Opciones habilitadas -->
+            <a class="list-group-item list-group-item-action" 
+               href="<%= request.getContextPath() %>/ControladorResidente?accion=pagos">
+                💳 Gestionar pagos
+            </a>
+            <a class="list-group-item list-group-item-action" 
+               href="<%= request.getContextPath() %>/ControladorResidente?accion=reservas">
+                📅 Gestionar reservas
+            </a>
+        </div>
+
+        <!-- Botón logout -->
+        <div class="text-center mt-3">
+            <a class="btn btn-danger" 
+               href="<%= request.getContextPath() %>/ControladorLogin?accion=logout">
+                🚪 Cerrar sesión
+            </a>
+        </div>
     </div>
-
-    <a class="logout-btn" href="<%= request.getContextPath() %>/ControladorLogin?accion=logout">Cerrar sesión</a>
 </div>
 </body>
 </html>
+

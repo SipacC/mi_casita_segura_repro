@@ -36,7 +36,7 @@ public class ControladorAdmin extends HttpServlet {
         String action = request.getParameter("accion");
 
         if (action == null || action.isEmpty()) {
-            action = "listar";
+            action = "vistasAdmin/menuAdministrador.jsp";
         }
 
         // CRUD y menú (manteniendo lógica original)

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
-    <!-- Nuevo servlet para login -->
+    <!-- 🔹 Servlet para Login -->
     <servlet>
         <servlet-name>ControladorLogin</servlet-name>
         <servlet-class>Controlador.ControladorLogin</servlet-class>
@@ -13,7 +13,7 @@
         <url-pattern>/ControladorLogin</url-pattern>
     </servlet-mapping>
 
-    <!-- Nuevo servlet para CRUD/admin -->
+    <!-- 🔹 Servlet para Administrador -->
     <servlet>
         <servlet-name>ControladorAdmin</servlet-name>
         <servlet-class>Controlador.ControladorAdmin</servlet-class>
@@ -23,11 +23,32 @@
         <url-pattern>/ControladorAdmin</url-pattern>
     </servlet-mapping>
 
+    <!-- 🔹 Servlet para Residente -->
+    <servlet>
+        <servlet-name>ControladorResidente</servlet-name>
+        <servlet-class>Controlador.ControladorResidente</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControladorResidente</servlet-name>
+        <url-pattern>/ControladorResidente</url-pattern>
+    </servlet-mapping>
+
+    <!-- 🔹 Servlet para Seguridad -->
+    <servlet>
+        <servlet-name>ControladorSeguridad</servlet-name>
+        <servlet-class>Controlador.ControladorSeguridad</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControladorSeguridad</servlet-name>
+        <url-pattern>/ControladorSeguridad</url-pattern>
+    </servlet-mapping>
+
+    <!-- 🔹 Configuración de sesión -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
 
-    <!-- Página inicial -->
+    <!-- 🔹 Página inicial -->
     <welcome-file-list>
         <welcome-file>ControladorLogin</welcome-file>
     </welcome-file-list>
