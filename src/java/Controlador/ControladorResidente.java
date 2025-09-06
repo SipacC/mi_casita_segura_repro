@@ -4,28 +4,38 @@ import Modelo.Persona;
 import Modelo.Pago;
 import Modelo.TipoPago;
 import Modelo.Tarjeta;
+import Modelo.Reserva;
+
 import ModeloDAO.PagoDAO;
 import ModeloDAO.TipoPagoDAO;
 import ModeloDAO.TarjetaDAO;
+import ModeloDAO.ReservaDAO;
 
 import Gestion_factura.CrearFactura;
 import Gestion_factura.CorreoEnviarFactura;
+import Gestion_reserva.CrearReservaPDF;
+import Gestion_reserva.CorreoEnviarReserva;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 
 public class ControladorResidente extends HttpServlet {
 
+    // Rutas JSP
     String menuResidente = "vistasResidente/menuResidente.jsp";
     String pagos = "vistasResidente/pagos.jsp";
     String registrarPago = "vistasResidente/registrarPago.jsp";
     String consultarPago = "vistasResidente/consultarPago.jsp";
-    String reservas = "vistasResidente/reservas.jsp"; // lo harás después
+    String reservas = "vistasResidente/reservas.jsp";
+    String crearReserva = "vistasResidente/crearReserva.jsp";
 
+    // DAOs
     PagoDAO pagoDAO = new PagoDAO();
     TipoPagoDAO tipoDAO = new TipoPagoDAO();
     TarjetaDAO tarjetaDAO = new TarjetaDAO();
+    ReservaDAO reservaDAO = new ReservaDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,17 +52,17 @@ public class ControladorResidente extends HttpServlet {
         String action = request.getParameter("accion");
         String acceso = menuResidente; // default: menú residente
 
+        // ==========================
+        // PAGOS
+        // ==========================
         if ("pagos".equalsIgnoreCase(action)) {
-            // Mostrar lista de pagos realizados
             request.setAttribute("listaPagos", pagoDAO.listarPorUsuario(usr.getId_usuario()));
             acceso = pagos;
 
         } else if ("registrarPago".equalsIgnoreCase(action)) {
-            // Mostrar formulario para registrar un nuevo pago
             acceso = registrarPago;
 
         } else if ("guardarPago".equalsIgnoreCase(action)) {
-            // Capturar datos del formulario
             String nombreTipo = request.getParameter("tipo_pago");
             TipoPago tp = tipoDAO.buscarPorNombre(nombreTipo);
 
@@ -67,24 +77,22 @@ public class ControladorResidente extends HttpServlet {
             String metodo = request.getParameter("metodo_pago");
 
             if ("Efectivo".equalsIgnoreCase(metodo)) {
-                // 🔹 En efectivo → estado pendiente
                 pago.setEstado("Pendiente");
-
                 int idPago = pagoDAO.registrarPago(pago);
+
                 if (idPago > 0) {
                     String numeroFactura = "FAC-" + idPago;
-
-                    // ✅ Generar factura
                     String rutaFactura = CrearFactura.generarFactura(pago, usr, numeroFactura);
 
-                    // ✅ Enviar factura
-                    CorreoEnviarFactura correo = new CorreoEnviarFactura();
-                    correo.enviarFactura(
-                            usr.getCorreo(),
-                            usr.getNombres(),
-                            rutaFactura,
-                            "Pago en efectivo (" + nombreTipo + ")"
-                    );
+                    if (rutaFactura != null) {
+                        CorreoEnviarFactura correo = new CorreoEnviarFactura();
+                        correo.enviarFactura(
+                                usr.getCorreo(),
+                                usr.getNombres(),
+                                rutaFactura,
+                                "Pago en efectivo (" + nombreTipo + ")"
+                        );
+                    }
 
                     request.setAttribute("mensaje", "📄 Factura generada y enviada, pendiente de pago en efectivo.");
                 } else {
@@ -92,40 +100,33 @@ public class ControladorResidente extends HttpServlet {
                 }
 
             } else if ("Tarjeta".equalsIgnoreCase(metodo)) {
-                // 🔹 En tarjeta → validar contra BD
                 String numero = request.getParameter("numero");
                 String nombre = request.getParameter("nombre");
-                String expira = request.getParameter("expira"); // MM/AA
                 String cvv = request.getParameter("cvv");
                 double total = pago.getMonto() + pago.getMora();
 
-                // Buscar tarjeta
                 Tarjeta tarjeta = tarjetaDAO.buscarTarjeta(numero, nombre, cvv);
 
                 if (tarjeta != null) {
-                    // Validar vencimiento y saldo
                     boolean valida = tarjetaDAO.validarTarjeta(numero, nombre, cvv, total);
                     if (valida) {
-                        // Descontar saldo
                         tarjetaDAO.descontarSaldo(numero, total);
-
                         pago.setEstado("Confirmado");
                         int idPago = pagoDAO.registrarPago(pago);
 
                         if (idPago > 0) {
                             String numeroFactura = "FAC-" + idPago;
-
-                            // ✅ Generar factura
                             String rutaFactura = CrearFactura.generarFactura(pago, usr, numeroFactura);
 
-                            // ✅ Enviar factura
-                            CorreoEnviarFactura correo = new CorreoEnviarFactura();
-                            correo.enviarFactura(
-                                    usr.getCorreo(),
-                                    usr.getNombres(),
-                                    rutaFactura,
-                                    "Pago con tarjeta (" + nombreTipo + ")"
-                            );
+                            if (rutaFactura != null) {
+                                CorreoEnviarFactura correo = new CorreoEnviarFactura();
+                                correo.enviarFactura(
+                                        usr.getCorreo(),
+                                        usr.getNombres(),
+                                        rutaFactura,
+                                        "Pago con tarjeta (" + nombreTipo + ")"
+                                );
+                            }
 
                             request.setAttribute("mensaje", "✅ Pago realizado con tarjeta. Factura enviada por correo.");
                         } else {
@@ -141,12 +142,10 @@ public class ControladorResidente extends HttpServlet {
                 }
             }
 
-            // Siempre mostrar lista de pagos después
             request.setAttribute("listaPagos", pagoDAO.listarPorUsuario(usr.getId_usuario()));
             acceso = pagos;
 
         } else if ("consultarPago".equalsIgnoreCase(action)) {
-            // Consultar cuánto debe el usuario (usando fecha_creacion)
             String tipoPago = request.getParameter("tipo_pago");
             double total = pagoDAO.calcularMontoConMora(
                     usr.getId_usuario(),
@@ -157,12 +156,83 @@ public class ControladorResidente extends HttpServlet {
             request.setAttribute("tipoPago", tipoPago);
             request.setAttribute("totalPago", total);
             acceso = consultarPago;
+        }
 
-        } else if ("reservas".equalsIgnoreCase(action)) {
+        // ==========================
+        // RESERVAS
+        // ==========================
+        else if ("reservas".equalsIgnoreCase(action)) {
+            String buscar = request.getParameter("buscar");
+            List<Reserva> lista;
+            if (buscar != null && !buscar.trim().isEmpty()) {
+                lista = reservaDAO.buscarPorNombre(usr.getId_usuario(), buscar);
+                request.setAttribute("busqueda", buscar);
+            } else {
+                lista = reservaDAO.listarPorUsuario(usr.getId_usuario());
+            }
+
+            request.setAttribute("listaReservas", lista);
+            acceso = reservas;
+
+        } else if ("crearReserva".equalsIgnoreCase(action)) {
+            acceso = crearReserva;
+
+        } else if ("guardarReserva".equalsIgnoreCase(action)) {
+            Reserva r = new Reserva();
+            r.setId_usuario(usr.getId_usuario());
+            r.setId_area(Integer.parseInt(request.getParameter("id_area")));
+            r.setFecha_reserva(request.getParameter("fecha"));
+            r.setHora_inicio(request.getParameter("hora_inicio"));
+            r.setHora_fin(request.getParameter("hora_fin"));
+            r.setEstado("Activa");
+
+            if (reservaDAO.validarDisponibilidad(r)) {
+                int idReserva = reservaDAO.insertar(r);
+
+                if (idReserva > 0) {
+                    r.setId_reserva(idReserva);
+
+                    // Generar PDF
+                    String rutaPDF = CrearReservaPDF.generarReserva(
+                            r,
+                            request.getParameter("nombre_area"),
+                            usr.getNombres()
+                    );
+
+                    if (rutaPDF != null) {
+                        // Enviar correo solo si hay PDF
+                        CorreoEnviarReserva.enviarCorreo(
+                                usr.getCorreo(),
+                                "Confirmación de reserva #" + r.getId_reserva(),
+                                "Estimado " + usr.getNombres() + ", su reserva ha sido confirmada exitosamente. 🎉",
+                                rutaPDF
+                        );
+                        request.setAttribute("mensaje", "✅ Reserva creada y comprobante enviado al correo.");
+                    } else {
+                        request.setAttribute("error", "⚠️ No se pudo generar el PDF de la reserva.");
+                    }
+                } else {
+                    request.setAttribute("error", "❌ Error al guardar la reserva.");
+                }
+            } else {
+                request.setAttribute("error", "⚠️ El área no está disponible en ese horario.");
+            }
+
+            request.setAttribute("listaReservas", reservaDAO.listarPorUsuario(usr.getId_usuario()));
+
+            acceso = reservas;
+
+        } else if ("cancelarReserva".equalsIgnoreCase(action)) {
+            int idReserva = Integer.parseInt(request.getParameter("id"));
+            reservaDAO.cancelar(idReserva);
+            request.setAttribute("mensaje", "❌ Reserva cancelada con éxito.");
+
+            request.setAttribute("listaReservas", reservaDAO.listarPorUsuario(usr.getId_usuario()));
+            
             acceso = reservas;
 
         } else {
-            acceso = menuResidente; // default
+            acceso = menuResidente; // fallback
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(acceso);

@@ -40,7 +40,7 @@
         <div class="text-center mt-3">
             <a class="btn btn-danger" 
                href="<%= request.getContextPath() %>/ControladorLogin?accion=logout">
-                🚪 Cerrar sesión
+                Cerrar sesión
             </a>
         </div>
     </div>
