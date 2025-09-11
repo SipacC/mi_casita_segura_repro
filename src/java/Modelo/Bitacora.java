@@ -9,6 +9,11 @@ public class Bitacora {
     private String modulo;
     private Timestamp fecha_hora;
 
+    // para los joins
+    private String usuario_actor;    
+    private String usuario_afectado; 
+
+
     // Constructor vacío
     public Bitacora() {}
 
@@ -19,6 +24,8 @@ public class Bitacora {
         this.accion = accion;
         this.modulo = modulo;
         this.fecha_hora = fecha_hora;
+
+        
     }
 
     // Getters y Setters
@@ -61,4 +68,22 @@ public class Bitacora {
     public void setFecha_hora(Timestamp fecha_hora) {
         this.fecha_hora = fecha_hora;
     }
+
+    // 🔹 Nuevos getters/setters
+    public String getUsuario_actor() {
+        return usuario_actor;
+    }
+
+    public void setUsuario_actor(String usuario_actor) {
+        this.usuario_actor = usuario_actor;
+    }
+
+    public String getUsuario_afectado() {
+        return usuario_afectado;
+    }
+
+    public void setUsuario_afectado(String usuario_afectado) {
+        this.usuario_afectado = usuario_afectado;
+    }
+
 }

@@ -3,12 +3,15 @@ package Controlador;
 import Modelo.Persona;
 import ModeloDAO.PersonaDAO;
 import ModeloDAO.BitacoraDAO;
+import Gestion_bitacora.RegistroBitacora;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import Gestion_bitacora.RegistroBitacora;
 
 public class ControladorLogin extends HttpServlet {
 
@@ -33,7 +36,8 @@ public class ControladorLogin extends HttpServlet {
                 Persona u = (Persona) s.getAttribute("usuario");
                 if (u != null) {
                     // ✅ Registrar cierre de sesión
-                    new BitacoraDAO().registrarAccion(u.getId_usuario(), "Cierre de sesión", "Login");
+                    //new BitacoraDAO().registrarAccion(u.getId_usuario(), "Cierre de sesión", "Login");
+                    RegistroBitacora.log(request, "Cierre de sesión", "Login");
                 }
                 s.invalidate();
             }
@@ -57,8 +61,11 @@ public class ControladorLogin extends HttpServlet {
                 newSession.setAttribute("usuario", usuario);
 
                 // ✅ Registrar inicio de sesión
-                BitacoraDAO bitacoraDAO = new BitacoraDAO();
-                bitacoraDAO.registrarAccion(usuario.getId_usuario(), "Inicio de sesión", "Login");
+                //BitacoraDAO bitacoraDAO = new BitacoraDAO();
+                //bitacoraDAO.registrarAccion(usuario.getId_usuario(), "Inicio de sesión", "Login");
+                // ✅ Registrar inicio de sesión
+                RegistroBitacora.log(request, "Inicio de sesión", "Login");
+
 
                 // ✅ Redirección según rol
                 String rol = usuario.getRol().toLowerCase();

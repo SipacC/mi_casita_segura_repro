@@ -45,6 +45,10 @@
         <a class="list-group-item" href="<%= request.getContextPath() %>/vistasAdmin/menuCamaras.jsp">
             Administrador de Cámaras
         </a>
+        <!-- Nueva opción: Bitácora -->
+        <a class="list-group-item" href="<%= request.getContextPath() %>/ControladorAdmin?accion=verBitacora">
+            Ver Bitácora
+        </a>
     </div>
 
     <!-- Botón de Cerrar Sesión -->

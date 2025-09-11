@@ -2,6 +2,9 @@ package Controlador;
 
 import Modelo.Persona;
 import ModeloDAO.PersonaDAO;
+import ModeloDAO.BitacoraDAO;
+import Gestion_bitacora.RegistroBitacora;
+
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -19,6 +22,7 @@ public class ControladorAdmin extends HttpServlet {
     String add = "vistasAdmin/add.jsp";
     String edit = "vistasAdmin/edit.jsp";
     String menuCamaras = "vistasAdmin/menuCamaras.jsp"; // 🔹 agregado
+    String bitacora = "vistasAdmin/bitacora.jsp"; // 🔹 agregado
     Persona p = new Persona();
     PersonaDAO dao = new PersonaDAO();
     int id;
@@ -70,6 +74,7 @@ public class ControladorAdmin extends HttpServlet {
 
                 if (idNuevo > 0) {
                     System.out.println("✅ Usuario creado con ID " + idNuevo + " y QR generado.");
+                    RegistroBitacora.log(request, "Creó un nuevo usuario con ID " + idNuevo, "Agregar usuario");
                 } else {
                     System.err.println("❌ Error al crear el usuario y generar QR.");
                 }
@@ -113,6 +118,7 @@ public class ControladorAdmin extends HttpServlet {
                 }
 
                 dao.edit(p);
+                RegistroBitacora.log(request, "Actualizó datos del usuario con ID " + p.getId_usuario(), "Editar Usuario");
                 response.sendRedirect("ControladorAdmin?accion=listar");
                 return;
             }
@@ -120,11 +126,30 @@ public class ControladorAdmin extends HttpServlet {
         } else if (action.equalsIgnoreCase("eliminar")) {
             id = Integer.parseInt(request.getParameter("id"));
             dao.eliminar(id);
+            RegistroBitacora.log(request, "Eliminó al usuario con ID " + id, "Usuarios");
             response.sendRedirect("ControladorAdmin?accion=listar");
             return;
 
         } else if (action.equalsIgnoreCase("menuCamaras")) { // 🔹 nuevo caso
             acceso = menuCamaras;
+        } else if (action.equalsIgnoreCase("verBitacora")) {
+            // 🔹 Obtener parámetros de filtro
+            String filtroUsuario = request.getParameter("usuario");
+            String filtroModulo = request.getParameter("modulo");
+
+            Integer idUsuario = null;
+            if (filtroUsuario != null && !filtroUsuario.trim().isEmpty()) {
+                try {
+                    idUsuario = Integer.parseInt(filtroUsuario);
+                } catch (Exception e) {
+                    idUsuario = null;
+                }
+            }
+
+            BitacoraDAO bitacoraDAO = new BitacoraDAO();
+            request.setAttribute("listaBitacora", bitacoraDAO.listar(idUsuario, filtroModulo));
+
+            acceso = bitacora;
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(acceso);
