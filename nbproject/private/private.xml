@@ -3,7 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/proyectsjava8/CRUD-MVC-JAVA/src/java/Gestion_qr/CrearQr.java</file>
+            <file>file:/C:/proyectsjava8/CRUD-MVC-JAVA/src/java/Controlador/ControladorLogin.java</file>
+            <file>file:/C:/proyectsjava8/CRUD-MVC-JAVA/src/java/Gestion_bitacora/RegistroBitacora.java</file>
+            <file>file:/C:/proyectsjava8/CRUD-MVC-JAVA/src/java/Controlador/ControladorAdmin.java</file>
         </group>
     </open-files>
 </project-private>

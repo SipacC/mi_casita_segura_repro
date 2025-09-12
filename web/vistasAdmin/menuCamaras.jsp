@@ -19,12 +19,12 @@
     <h2>Administrador de Cámaras</h2>
     <div class="list-group">
         <a class="list-group-item list-group-item-action" 
-   href="<%= request.getContextPath() %>/vistasAdmin/camaraEntrada.jsp" target="_blank">
+   href="<%= request.getContextPath() %>/vistasAdmin/camaraEntrada.jsp">
     📷 Cámara Entrada (Teléfono 1)
 </a>
 
 <a class="list-group-item list-group-item-action" 
-   href="<%= request.getContextPath() %>/vistasAdmin/camaraSalida.jsp" target="_blank">
+   href="<%= request.getContextPath() %>/vistasAdmin/camaraSalida.jsp">
     📷 Cámara Salida (Teléfono 2)
 </a>
     </div>
