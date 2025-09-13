@@ -26,7 +26,7 @@ public class ControladorLogin extends HttpServlet {
         }
 
         if (action.equalsIgnoreCase("login")) {
-            // Redirige al login.jsp
+            
             RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
             vista.forward(request, response);
 
@@ -35,8 +35,6 @@ public class ControladorLogin extends HttpServlet {
             if (s != null) {
                 Persona u = (Persona) s.getAttribute("usuario");
                 if (u != null) {
-                    // ✅ Registrar cierre de sesión
-                    //new BitacoraDAO().registrarAccion(u.getId_usuario(), "Cierre de sesión", "Login");
                     RegistroBitacora.log(request, "Cierre de sesión", "Login");
                 }
                 s.invalidate();
@@ -60,14 +58,8 @@ public class ControladorLogin extends HttpServlet {
                 javax.servlet.http.HttpSession newSession = request.getSession(true);
                 newSession.setAttribute("usuario", usuario);
 
-                // ✅ Registrar inicio de sesión
-                //BitacoraDAO bitacoraDAO = new BitacoraDAO();
-                //bitacoraDAO.registrarAccion(usuario.getId_usuario(), "Inicio de sesión", "Login");
-                // ✅ Registrar inicio de sesión
                 RegistroBitacora.log(request, "Inicio de sesión", "Login");
 
-
-                // ✅ Redirección según rol
                 String rol = usuario.getRol().toLowerCase();
 
                 switch (rol) {
@@ -81,7 +73,7 @@ public class ControladorLogin extends HttpServlet {
                         response.sendRedirect("vistasSeguridad/menuSeguridad.jsp");
                         break;
                     default:
-                        // Rol no reconocido
+
                         newSession.invalidate();
                         request.setAttribute("error", "Rol no autorizado");
                         RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
@@ -90,7 +82,6 @@ public class ControladorLogin extends HttpServlet {
                 }
 
             } else {
-                // Usuario o contraseña incorrectos
                 request.setAttribute("error", "Nombre o contraseña incorrectos");
                 RequestDispatcher vista = request.getRequestDispatcher("/vistasLogin/login.jsp");
                 vista.forward(request, response);

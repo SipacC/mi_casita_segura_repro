@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BitacoraDAO {
-
-    // ✅ Insertar acción en bitácora
     public void registrarAccion(int id_usuario, String accion, String modulo) {
         String sql = "INSERT INTO bitacora (id_usuario, accion, modulo) VALUES (?, ?, ?)";
 
@@ -26,8 +24,6 @@ public class BitacoraDAO {
             e.printStackTrace();
         }
     }
-
-    // ✅ Listar con filtros dinámicos (usuario, módulo o ambos)
     public List<Bitacora> listar(Integer idUsuario, String modulo) {
         List<Bitacora> lista = new ArrayList<>();
 

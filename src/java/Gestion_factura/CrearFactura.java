@@ -25,8 +25,7 @@ public class CrearFactura {
         String carpeta = "C:/facturasProyecto/";
         File dir = new File(carpeta);
         if (!dir.exists()) dir.mkdirs();
-
-        // ✅ ahora usamos numeroFactura
+        
         String nombreArchivo = "factura_" + numeroFactura + ".pdf";
         String rutaPDF = carpeta + nombreArchivo;
 
@@ -34,7 +33,6 @@ public class CrearFactura {
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc);
 
-        // Encabezado
         document.add(new Paragraph("FACTURA ELECTRÓNICA")
                 .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph("Residencial Mi Casita Segura")
@@ -43,19 +41,16 @@ public class CrearFactura {
                 .setTextAlignment(TextAlignment.RIGHT));
         document.add(new Paragraph("\n"));
 
-        // Info del usuario
         document.add(new Paragraph("Datos del Residente").setBold());
         document.add(new Paragraph("Nombre: " + usuario.getNombres()));
         document.add(new Paragraph("Correo: " + usuario.getCorreo()));
         document.add(new Paragraph("Lote/Casa: " + usuario.getLote() + " - " + usuario.getNumero_casa()));
         document.add(new Paragraph("\n"));
 
-        // Tipo de pago
         TipoPagoDAO tipoDAO = new TipoPagoDAO();
         TipoPago tipo = tipoDAO.buscarPorId(pago.getId_tipo());
         String nombreTipo = (tipo != null) ? tipo.getNombre() : "Desconocido";
 
-        // Tabla
         Table table = new Table(UnitValue.createPercentArray(new float[]{4, 2, 2, 2}));
         table.setWidth(UnitValue.createPercentValue(100));
 
@@ -72,17 +67,16 @@ public class CrearFactura {
         document.add(table);
         document.add(new Paragraph("\n"));
 
-        // Mensaje final
         document.add(new Paragraph("Se ha realizado el pago de " + nombreTipo + " con éxito.")
                 .setTextAlignment(TextAlignment.CENTER)
                 .setBold());
 
         document.close();
-        System.out.println("✅ Factura generada en: " + rutaPDF);
+        System.out.println("Factura generada en: " + rutaPDF);
 
         return rutaPDF;
     } catch (Exception e) {
-        System.err.println("❌ Error al generar factura: " + e.getMessage());
+        System.err.println("Error al generar factura: " + e.getMessage());
         return null;
     }
 }

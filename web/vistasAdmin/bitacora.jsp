@@ -40,9 +40,8 @@
 </head>
 <body class="container mt-4">
 
-    <h2 class="mb-4">📜 Bitácora del Sistema</h2>
+    <h2 class="mb-4">Bitácora del Sistema</h2>
 
-    <!-- Filtros -->
     <form method="get" action="<%= request.getContextPath() %>/ControladorAdmin" class="row g-3 mb-4">
         <input type="hidden" name="accion" value="verBitacora"/>
 
@@ -59,17 +58,12 @@
         </div>
 
             <div class="col-md-3 d-flex align-items-end">
-            <!-- Botón para aplicar filtros -->
             <button type="submit" class="btn btn-primary me-2">Filtrar</button>
-
-            <!-- Botón para recargar todos los datos sin borrar los inputs -->
             <a href="<%= request.getContextPath() %>/ControladorAdmin?accion=verBitacora" 
             class="btn btn-warning">Recargar y limpiar</a>
         </div>
 
     </form>
-
-    <!-- Tabla de bitácora -->
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
@@ -108,8 +102,6 @@
         %>
         </tbody>
     </table>
-
-    <!-- Botón volver -->
     <a href="<%= request.getContextPath() %>/vistasAdmin/menuAdministrador.jsp" class="btn btn-secondary">⬅ Volver al Menú</a>
 
 </body>

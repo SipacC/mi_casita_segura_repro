@@ -21,8 +21,8 @@ public class ControladorAdmin extends HttpServlet {
     String listar = "vistasAdmin/listar.jsp";
     String add = "vistasAdmin/add.jsp";
     String edit = "vistasAdmin/edit.jsp";
-    String menuCamaras = "vistasAdmin/menuCamaras.jsp"; // 🔹 agregado
-    String bitacora = "vistasAdmin/bitacora.jsp"; // 🔹 agregado
+    String menuCamaras = "vistasAdmin/menuCamaras.jsp";
+    String bitacora = "vistasAdmin/bitacora.jsp";
     Persona p = new Persona();
     PersonaDAO dao = new PersonaDAO();
     int id;
@@ -33,7 +33,7 @@ public class ControladorAdmin extends HttpServlet {
 
         if (request.getSession(false) == null || request.getSession().getAttribute("usuario") == null) {
             response.sendRedirect(request.getContextPath() + "/vistasLogin/login.jsp");
-            return; // detener ejecución
+            return;
         }
 
         String acceso = "";
@@ -43,7 +43,6 @@ public class ControladorAdmin extends HttpServlet {
             action = "vistasAdmin/menuAdministrador.jsp";
         }
 
-        // CRUD y menú (manteniendo lógica original)
         if (action.equalsIgnoreCase("listar")) {
             request.setAttribute("lista", dao.listar());
             acceso = listar;
@@ -55,10 +54,9 @@ public class ControladorAdmin extends HttpServlet {
             String usuario = request.getParameter("txtUsuario");
             String correo = request.getParameter("txtCorreo");
 
-            // Validación de duplicados en agregar
             if (dao.existeUsuarioOCorreo(usuario, correo)) {
                 request.setAttribute("error", "El usuario o correo ya existe, por favor use otro.");
-                acceso = add; // volver al formulario de add.jsp
+                acceso = add;
             } else {
                 p.setDpi(request.getParameter("txtDpi"));
                 p.setNombres(request.getParameter("txtNombres"));
@@ -73,10 +71,10 @@ public class ControladorAdmin extends HttpServlet {
                 int idNuevo = dao.add(p);
 
                 if (idNuevo > 0) {
-                    System.out.println("✅ Usuario creado con ID " + idNuevo + " y QR generado.");
+                    System.out.println("Usuario creado con ID " + idNuevo + " y QR generado.");
                     RegistroBitacora.log(request, "Creó un nuevo usuario con ID " + idNuevo, "Agregar usuario");
                 } else {
-                    System.err.println("❌ Error al crear el usuario y generar QR.");
+                    System.err.println("Error al crear el usuario y generar QR.");
                 }
                 response.sendRedirect("ControladorAdmin?accion=listar");
                 return;
@@ -93,11 +91,9 @@ public class ControladorAdmin extends HttpServlet {
             String usuario = request.getParameter("txtUsuario");
             String correo = request.getParameter("txtCorreo");
 
-            // Validación de duplicados en actualizar
             if (dao.existeUsuarioOCorreoEdit(usuario, correo, id)) {
                 request.setAttribute("error", "El usuario o correo ya existe, por favor use otro.");
-                request.setAttribute("idper", id); // mantener el id en edit.jsp
-                acceso = edit; // volver a edit.jsp
+                request.setAttribute("idper", id);
             } else {
                 Map<String, java.util.function.Consumer<String>> setters = new LinkedHashMap<>();
                 setters.put("txtDpi", valor -> p.setDpi(valor));
@@ -130,10 +126,9 @@ public class ControladorAdmin extends HttpServlet {
             response.sendRedirect("ControladorAdmin?accion=listar");
             return;
 
-        } else if (action.equalsIgnoreCase("menuCamaras")) { // 🔹 nuevo caso
+        } else if (action.equalsIgnoreCase("menuCamaras")) {
             acceso = menuCamaras;
         } else if (action.equalsIgnoreCase("verBitacora")) {
-            // 🔹 Obtener parámetros de filtro
             String filtroUsuario = request.getParameter("usuario");
             String filtroModulo = request.getParameter("modulo");
 

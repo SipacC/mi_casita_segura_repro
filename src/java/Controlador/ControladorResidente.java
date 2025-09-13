@@ -43,18 +43,14 @@ public class ControladorResidente extends HttpServlet {
         HttpSession session = request.getSession(false);
         Persona usr = (Persona) (session != null ? session.getAttribute("usuario") : null);
 
-        // 🔹 Validación de sesión y rol
         if (usr == null || !"residente".equalsIgnoreCase(usr.getRol())) {
             response.sendRedirect(request.getContextPath() + "/ControladorLogin?accion=login");
             return;
         }
 
         String action = request.getParameter("accion");
-        String acceso = menuResidente; // default: menú residente
+        String acceso = menuResidente;
 
-        // ==========================
-        // PAGOS
-        // ==========================
         if ("pagos".equalsIgnoreCase(action)) {
             request.setAttribute("listaPagos", pagoDAO.listarPorUsuario(usr.getId_usuario()));
             acceso = pagos;
@@ -94,9 +90,9 @@ public class ControladorResidente extends HttpServlet {
                         );
                     }
 
-                    request.setAttribute("mensaje", "📄 Factura generada y enviada, pendiente de pago en efectivo.");
+                    request.setAttribute("mensaje", "Factura generada y enviada, pendiente de pago en efectivo.");
                 } else {
-                    request.setAttribute("error", "❌ Error al registrar el pago en efectivo.");
+                    request.setAttribute("error", "Error al registrar el pago en efectivo.");
                 }
 
             } else if ("Tarjeta".equalsIgnoreCase(metodo)) {
@@ -128,16 +124,16 @@ public class ControladorResidente extends HttpServlet {
                                 );
                             }
 
-                            request.setAttribute("mensaje", "✅ Pago realizado con tarjeta. Factura enviada por correo.");
+                            request.setAttribute("mensaje", "Pago realizado con tarjeta. Factura enviada por correo.");
                         } else {
-                            request.setAttribute("error", "❌ Error al registrar el pago con tarjeta.");
+                            request.setAttribute("error", "Error al registrar el pago con tarjeta.");
                         }
                     } else {
-                        request.setAttribute("error", "⚠️ Tarjeta vencida o saldo insuficiente.");
+                        request.setAttribute("error", "Tarjeta vencida o saldo insuficiente.");
                         acceso = consultarPago;
                     }
                 } else {
-                    request.setAttribute("error", "⚠️ Tarjeta no encontrada.");
+                    request.setAttribute("error", "Tarjeta no encontrada.");
                     acceso = consultarPago;
                 }
             }
@@ -158,9 +154,6 @@ public class ControladorResidente extends HttpServlet {
             acceso = consultarPago;
         }
 
-        // ==========================
-        // RESERVAS
-        // ==========================
         else if ("reservas".equalsIgnoreCase(action)) {
             String buscar = request.getParameter("buscar");
             List<Reserva> lista;
@@ -192,7 +185,6 @@ public class ControladorResidente extends HttpServlet {
                 if (idReserva > 0) {
                     r.setId_reserva(idReserva);
 
-                    // Generar PDF
                     String rutaPDF = CrearReservaPDF.generarReserva(
                             r,
                             request.getParameter("nombre_area"),
@@ -200,22 +192,21 @@ public class ControladorResidente extends HttpServlet {
                     );
 
                     if (rutaPDF != null) {
-                        // Enviar correo solo si hay PDF
                         CorreoEnviarReserva.enviarCorreo(
                                 usr.getCorreo(),
                                 "Confirmación de reserva #" + r.getId_reserva(),
                                 "Estimado " + usr.getNombres() + ", su reserva ha sido confirmada exitosamente. 🎉",
                                 rutaPDF
                         );
-                        request.setAttribute("mensaje", "✅ Reserva creada y comprobante enviado al correo.");
+                        request.setAttribute("mensaje", "Reserva creada y comprobante enviado al correo.");
                     } else {
-                        request.setAttribute("error", "⚠️ No se pudo generar el PDF de la reserva.");
+                        request.setAttribute("error", "No se pudo generar el PDF de la reserva.");
                     }
                 } else {
-                    request.setAttribute("error", "❌ Error al guardar la reserva.");
+                    request.setAttribute("error", "Error al guardar la reserva.");
                 }
             } else {
-                request.setAttribute("error", "⚠️ El área no está disponible en ese horario.");
+                request.setAttribute("error", "El área no está disponible en ese horario.");
             }
 
             request.setAttribute("listaReservas", reservaDAO.listarPorUsuario(usr.getId_usuario()));
@@ -225,14 +216,14 @@ public class ControladorResidente extends HttpServlet {
         } else if ("cancelarReserva".equalsIgnoreCase(action)) {
             int idReserva = Integer.parseInt(request.getParameter("id"));
             reservaDAO.cancelar(idReserva);
-            request.setAttribute("mensaje", "❌ Reserva cancelada con éxito.");
+            request.setAttribute("mensaje", "Reserva cancelada con éxito.");
 
             request.setAttribute("listaReservas", reservaDAO.listarPorUsuario(usr.getId_usuario()));
             
             acceso = reservas;
 
         } else {
-            acceso = menuResidente; // fallback
+            acceso = menuResidente;
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(acceso);

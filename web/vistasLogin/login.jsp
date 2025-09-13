@@ -1,13 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    // ===============================
-    // Evitar cache
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 
-    // ===============================
-    // Si ya hay sesión activa, bloquear acceso al login
     Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
     if (usr != null) {
         // Redirige según rol
@@ -16,7 +12,7 @@
         } else {
             response.sendRedirect(request.getContextPath() + "/ControladorAdmin?accion=listar");
         }
-        return; // detener ejecución
+        return;
     }
 %>
 

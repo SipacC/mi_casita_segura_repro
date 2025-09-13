@@ -9,10 +9,6 @@ public class ReservaDAO {
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
-
-    // ==========================
-    // LISTAR RESERVAS DE UN USUARIO
-    // ==========================
     public List<Reserva> listarPorUsuario(int idUsuario) {
         List<Reserva> lista = new ArrayList<>();
         String sql = "SELECT r.id_reserva, r.id_usuario, r.id_area, r.fecha_reserva, " +
@@ -31,7 +27,7 @@ public class ReservaDAO {
                 r.setId_reserva(rs.getInt("id_reserva"));
                 r.setId_usuario(rs.getInt("id_usuario"));
                 r.setId_area(rs.getInt("id_area"));
-                r.setNombreArea(rs.getString("nombre_area")); // 👈 ahora sí trae el nombre
+                r.setNombreArea(rs.getString("nombre_area"));
                 r.setFecha_reserva(rs.getString("fecha_reserva"));
                 r.setHora_inicio(rs.getString("hora_inicio"));
                 r.setHora_fin(rs.getString("hora_fin"));
@@ -39,14 +35,10 @@ public class ReservaDAO {
                 lista.add(r);
             }
         } catch (Exception e) {
-            System.out.println("❌ Error listarPorUsuario: " + e.getMessage());
+            System.out.println("Error listarPorUsuario: " + e.getMessage());
         }
         return lista;
     }
-
-    // ==========================
-    // BUSCAR RESERVAS POR NOMBRE DE ÁREA
-    // ==========================
     public List<Reserva> buscarPorNombre(int idUsuario, String nombre) {
         List<Reserva> lista = new ArrayList<>();
         String sql = "SELECT r.id_reserva, r.id_usuario, r.id_area, r.fecha_reserva, " +
@@ -74,14 +66,12 @@ public class ReservaDAO {
                 lista.add(r);
             }
         } catch (Exception e) {
-            System.out.println("❌ Error buscarPorNombre: " + e.getMessage());
+            System.out.println("Error buscarPorNombre: " + e.getMessage());
         }
         return lista;
     }
 
-    // ==========================
-    // INSERTAR RESERVA (devuelve id generado)
-    // ==========================
+    
     public int insertar(Reserva r) {
         String sql = "INSERT INTO reserva (id_usuario, id_area, fecha_reserva, hora_inicio, hora_fin, estado) " +
                      "VALUES (?, ?, ?, ?, ?, ?) RETURNING id_reserva";
@@ -90,27 +80,23 @@ public class ReservaDAO {
             ps = con.prepareStatement(sql);
             ps.setInt(1, r.getId_usuario());
             ps.setInt(2, r.getId_area());
-
-            // Conversión segura
-            ps.setDate(3, java.sql.Date.valueOf(r.getFecha_reserva())); // yyyy-MM-dd
-            ps.setTime(4, java.sql.Time.valueOf(r.getHora_inicio() + ":00")); // HH:mm
+            ps.setDate(3, java.sql.Date.valueOf(r.getFecha_reserva())); 
+            ps.setTime(4, java.sql.Time.valueOf(r.getHora_inicio() + ":00"));
             ps.setTime(5, java.sql.Time.valueOf(r.getHora_fin() + ":00"));
             ps.setString(6, r.getEstado());
 
             rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1); // id_reserva generado
+                return rs.getInt(1);
             }
         } catch (Exception e) {
-            System.out.println("❌ Error insertar: " + e.getMessage());
+            System.out.println("Error insertar: " + e.getMessage());
         }
         return -1;
     }
 
-    // ==========================
-    // VALIDAR DISPONIBILIDAD (sin choques de horario)
-    // ==========================
-    public boolean validarDisponibilidad(Reserva r) {
+    
+    public boolean validarDisponibilidad(Reserva r) { // si una area esta dispoible
         String sql = "SELECT COUNT(*) FROM reserva " +
                      "WHERE id_area = ? AND fecha_reserva = ? " +
                      "AND estado = 'Activa' " +
@@ -131,14 +117,11 @@ public class ReservaDAO {
                 return rs.getInt(1) == 0;
             }
         } catch (Exception e) {
-            System.out.println("❌ Error validarDisponibilidad: " + e.getMessage());
+            System.out.println("Error validarDisponibilidad: " + e.getMessage());
         }
         return false;
     }
 
-    // ==========================
-    // CANCELAR RESERVA
-    // ==========================
     public boolean cancelar(int idReserva) {
         String sql = "UPDATE reserva SET estado = 'Cancelada' WHERE id_reserva = ?";
         try {
@@ -148,7 +131,7 @@ public class ReservaDAO {
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
-            System.out.println("❌ Error cancelar: " + e.getMessage());
+            System.out.println("Error cancelar: " + e.getMessage());
         }
         return false;
     }

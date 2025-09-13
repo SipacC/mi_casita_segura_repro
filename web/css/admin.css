@@ -1,4 +1,3 @@
-/* === Estilos generales === */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f6f9;
@@ -6,7 +5,6 @@ body {
     padding: 0;
 }
 
-/* === Contenedor principal === */
 .admin-container {
     max-width: 900px;
     margin: 40px auto;
@@ -16,7 +14,6 @@ body {
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
-/* === Título === */
 .admin-container h2 {
     text-align: center;
     color: #333;
@@ -30,7 +27,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* === Lista de opciones === */
 .list-group {
     display: flex;
     flex-direction: column;
@@ -55,7 +51,6 @@ body {
     border-color: #4a90e2;
 }
 
-/* === Botón de cerrar sesión === */
 .logout-btn {
     display: inline-block;
     background-color: #dc3545;
@@ -74,7 +69,6 @@ body {
     background-color: #a71d2a;
 }
 
-/* === Adaptación móvil === */
 @media (max-width: 600px) {
     .admin-container {
         padding: 20px;

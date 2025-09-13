@@ -13,8 +13,7 @@ public class Persona {
     private String lote;
     private String numero_casa;
     private String estado; 
-    private Date fecha_creacion; // ✅ nuevo campo
-
+    private Date fecha_creacion;
     public Persona() {
     }
     
@@ -29,10 +28,8 @@ public class Persona {
         this.lote = lote;
         this.numero_casa = numero_casa;
         this.estado = estado;
-        this.fecha_creacion = fecha_creacion; // ✅
+        this.fecha_creacion = fecha_creacion;
     }
-
-    // getters y setters
 
     public int getId_usuario() { return id_usuario; }
     public void setId_usuario(int id_usuario) { this.id_usuario = id_usuario; }
@@ -64,6 +61,6 @@ public class Persona {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    public Date getFecha_creacion() { return fecha_creacion; } // ✅ getter
-    public void setFecha_creacion(Date fecha_creacion) { this.fecha_creacion = fecha_creacion; } // ✅ setter
+    public Date getFecha_creacion() { return fecha_creacion; }
+    public void setFecha_creacion(Date fecha_creacion) { this.fecha_creacion = fecha_creacion; }
 }

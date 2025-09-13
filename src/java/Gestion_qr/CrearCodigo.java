@@ -5,8 +5,7 @@ import java.security.SecureRandom;
 public class CrearCodigo {
     private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int LONGITUD = 10;
-
-    // Genera un código aleatorio de 10 caracteres
+    
     public static String generarCodigo() {
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder(LONGITUD);

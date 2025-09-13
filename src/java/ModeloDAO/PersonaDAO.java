@@ -1,5 +1,4 @@
 package ModeloDAO;
-
 import Config.Conexion;
 import Intefaces.CRUD;
 import Modelo.Persona;
@@ -20,7 +19,6 @@ public class PersonaDAO implements CRUD {
     @Override
     public List<Persona> listar() {
         List<Persona> list = new ArrayList<>();
-        //String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios";
         String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado, fecha_creacion FROM usuarios";
         try {
             con = cn.getConnection();
@@ -50,7 +48,6 @@ public class PersonaDAO implements CRUD {
 
     @Override
     public Persona list(int id) {
-        //String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado FROM usuarios WHERE id_usuario = ?";
         String sql = "SELECT id_usuario, dpi, nombres, usuario, rol, contrasena, correo, lote, numero_casa, estado, fecha_creacion FROM usuarios WHERE id_usuario = ?";
 
         Persona per = null;
@@ -96,21 +93,15 @@ public class PersonaDAO implements CRUD {
             ps.setString(7, per.getLote());
             ps.setString(8, per.getNumero_casa());
             ps.setString(9, per.getEstado());
-
             int rows = ps.executeUpdate();
-
             if (rows > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
                     int idUsuario =rs.getInt(1);
-                    //genera el codigo eleatorio
                     String codigoQR = Gestion_qr.CrearCodigo.generarCodigo();
-                    //Generar el qr en disco
                     String rutaQR = Gestion_qr.CrearQr.generarQR(idUsuario, codigoQR);
-                    //inserta en qr_usuario y acceso_usuario
                     Gestion_qr.RegistrarQrAcceso registrar = new Gestion_qr.RegistrarQrAcceso();
                     int idQrUsuario = registrar.registrarQrYAcceso(idUsuario, codigoQR, per.getRol());
-                    //enviar correo al usuario + qr solo si todo salio bien
                     if (idQrUsuario > 0){
                         Gestion_qr.correoEnviarQr correo = new Gestion_qr.correoEnviarQr();
                         correo.enviarConQR(
@@ -118,11 +109,8 @@ public class PersonaDAO implements CRUD {
                         per.getNombres(),
                         rutaQR);
                     }
-                    
-                    
-
-                    System.out.println("✅ Usuario creado con ID " + idUsuario);
-                    System.out.println("✅ QR generado en: " + rutaQR);
+                    System.out.println("Usuario creado con ID " + idUsuario);
+                    System.out.println("QR generado en: " + rutaQR);
                     return idUsuario;
                 }                
             }
@@ -161,14 +149,11 @@ public boolean edit(Persona per) {
         }
 
         if (params.isEmpty()) {
-            // No hay campos para actualizar
             return false;
         }
 
-        // Quitar última coma y espacio
         sql.setLength(sql.length() - 2);
 
-        // Agregar condición WHERE
         sql.append(" WHERE id_usuario = ?");
         params.add(per.getId_usuario());
 
@@ -204,10 +189,7 @@ public boolean edit(Persona per) {
 
     @Override
     public Persona findByLogin(String usuario, String contrasena) {
-        //String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado FROM usuarios WHERE usuario = ? AND contrasena = ?";
-        String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado, fecha_creacion FROM usuarios WHERE usuario = ? AND contrasena = ?";
-
-        try {
+        String sql = "SELECT id_usuario, dpi, nombres, usuario, correo, contrasena, rol, lote, numero_casa, estado, fecha_creacion FROM usuarios WHERE usuario = ? AND contrasena = ?";        try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, usuario);
@@ -244,7 +226,7 @@ public boolean edit(Persona per) {
         ps.setString(2, correo);
         rs = ps.executeQuery();
         if (rs.next()) {
-            return rs.getInt(1) > 0; // true si existe
+            return rs.getInt(1) > 0;
         }
     } catch (Exception e) {
         e.printStackTrace();

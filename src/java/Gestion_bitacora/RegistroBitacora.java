@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 public final class RegistroBitacora {
 
-    // Constructor privado para que no se pueda instanciar
     private RegistroBitacora() {}
 
     /**
@@ -20,8 +19,7 @@ public final class RegistroBitacora {
     public static void log(HttpServletRequest req, String accion, String modulo) {
         HttpSession ses = (req != null) ? req.getSession(false) : null;
         Persona actor = (ses != null) ? (Persona) ses.getAttribute("usuario") : null;
-        int idActor = (actor != null) ? actor.getId_usuario() : 0; // 0 = sistema/desconocido
-
+        int idActor = (actor != null) ? actor.getId_usuario() : 0;
         new BitacoraDAO().registrarAccion(idActor, accion, modulo);
     }
 }

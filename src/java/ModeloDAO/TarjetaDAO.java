@@ -11,7 +11,6 @@ public class TarjetaDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    // 🔹 Buscar tarjeta por número y CVV (opcional también titular)
     public Tarjeta buscarTarjeta(String numero, String nombreTitular, String cvv) {
         String sql = "SELECT * FROM tarjeta WHERE numero_tarjeta=? AND nombre_titular=? AND cvv=?";
         try {
@@ -40,31 +39,31 @@ public class TarjetaDAO {
         return null;
     }
 
-    // 🔹 Validar si la tarjeta es válida y si tiene saldo suficiente
+    // Validar si la tarjeta es válida y si tiene saldo suficiente
     public boolean validarTarjeta(String numero, String nombreTitular, String cvv, double monto) {
         Tarjeta t = buscarTarjeta(numero, nombreTitular, cvv);
         if (t == null) {
-            System.err.println("❌ Tarjeta no encontrada");
+            System.err.println("Tarjeta no encontrada");
             return false;
         }
 
-        // Verificar vencimiento
+        
         java.time.LocalDate hoy = java.time.LocalDate.now();
         if (t.getFecha_vencimiento().toLocalDate().isBefore(hoy)) {
-            System.err.println("❌ Tarjeta vencida");
+            System.err.println("Tarjeta vencida");
             return false;
         }
 
         // Verificar saldo
         if (t.getSaldo() < monto) {
-            System.err.println("⚠️ Saldo insuficiente");
+            System.err.println("Saldo insuficiente");
             return false;
         }
 
         return true;
     }
 
-    // 🔹 Descontar saldo
+    // Descontar saldo
     public boolean descontarSaldo(String numero, double monto) {
         String sql = "UPDATE tarjeta SET saldo = saldo - ? WHERE numero_tarjeta=?";
         try {
@@ -79,7 +78,7 @@ public class TarjetaDAO {
         return false;
     }
 
-    // 🔹 Registrar nueva tarjeta (opcional)
+    //Registrar nueva tarjeta
     public boolean registrarTarjeta(Tarjeta t) {
         String sql = "INSERT INTO tarjeta (id_usuario, numero_tarjeta, fecha_vencimiento, cvv, nombre_titular, tipo_tarjeta, saldo) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";

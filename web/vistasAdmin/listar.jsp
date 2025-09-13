@@ -3,9 +3,6 @@
 <%@page import="Modelo.Persona"%>
 
 <%
-    // ===============================
-    // Validar sesión activa
-    // ===============================
     Persona usr = (Persona) session.getAttribute("usuario");
     if (usr == null) {
         response.sendRedirect(request.getContextPath() + "/ControladorLogin?accion=login");
@@ -25,13 +22,11 @@
 <div class="container mt-4">
     <h1>Personas</h1>
     
-    <!-- Botones de acción -->
     <div class="mb-3">
         <a class="btn btn-success" href="ControladorAdmin?accion=add">Agregar Nuevo</a>
         <a class="btn btn-primary" href="<%= request.getContextPath() %>/vistasAdmin/menuAdministrador.jsp">Regresar al Menú</a>
     </div>
     
-    <!-- Tabla de personas -->
     <table class="table table-bordered table-striped w-100" style="font-size: 1.1rem;">
         <thead class="table-dark text-center">
             <tr>

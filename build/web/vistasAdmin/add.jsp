@@ -22,8 +22,6 @@
     <div class="col-lg-6 mx-auto">
 
         <h1 class="mb-3">Agregar Persona</h1>
-
-        <!-- Mensaje de error si existe -->
         <% if (request.getAttribute("error") != null) { %>
             <div class="alert alert-danger text-center" role="alert">
                 <%= request.getAttribute("error") %>

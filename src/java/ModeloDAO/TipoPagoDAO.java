@@ -12,7 +12,6 @@ public class TipoPagoDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    // Listar todos los tipos de pago
     public List<TipoPago> listar() {
         List<TipoPago> lista = new ArrayList<>();
         String sql = "SELECT * FROM TipoPago ORDER BY id_tipo";
@@ -33,7 +32,6 @@ public class TipoPagoDAO {
         return lista;
     }
 
-    // Buscar por nombre (ej. "Mantenimiento")
     public TipoPago buscarPorNombre(String nombre) {
         String sql = "SELECT * FROM TipoPago WHERE nombre = ?";
         try {
@@ -54,7 +52,6 @@ public class TipoPagoDAO {
         return null;
     }
 
-    // Buscar por ID
     public TipoPago buscarPorId(int id_tipo) {
         String sql = "SELECT * FROM TipoPago WHERE id_tipo = ?";
         try {

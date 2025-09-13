@@ -19,27 +19,27 @@
     </style>
 </head>
 <body>
-    <h2>📷 Cámara Entrada</h2>
+    <h2>Cámara Entrada</h2>
     <div id="reader"></div>
-    <div id="mensajes"></div> <!-- Aquí mostramos mensajes -->
+    <div id="mensajes"></div>
 
     <script>
     let host = window.location.hostname; 
     let socket = new WebSocket("ws://" + host + ":8080/CRUD-MVC-JAVA/qrSocket");
 
     socket.onopen = () => {
-        console.log("✅ Conectado a WebSocket (Entrada)");
+        console.log("Conectado a WebSocket (Entrada)");
         document.getElementById("mensajes").innerText = "Conectado al servidor ✔️";
     };
 
     socket.onerror = (event) => {
-        console.error("❌ Error en WebSocket", event);
-        document.getElementById("mensajes").innerText = "❌ Error en conexión WebSocket";
+        console.error("Error en WebSocket", event);
+        document.getElementById("mensajes").innerText = "Error en conexión WebSocket";
     };
 
     socket.onclose = () => {
-        console.warn("⚠️ Conexión WebSocket cerrada");
-        document.getElementById("mensajes").innerText = "⚠️ Conexión cerrada con el servidor";
+        console.warn("Conexión WebSocket cerrada");
+        document.getElementById("mensajes").innerText = "Conexión cerrada con el servidor";
     };
 
     socket.onmessage = (event) => {
@@ -47,47 +47,46 @@
         let mensajeDiv = document.getElementById("mensajes");
 
         if (data.resultado === "valido") {
-            alert("✅ Entrada permitida: " + data.usuario);
-            mensajeDiv.innerText = "✅ Bienvenido " + data.usuario;
+            alert("Entrada permitida: " + data.usuario);
+            mensajeDiv.innerText = "Bienvenido " + data.usuario;
 
         } else if (data.resultado === "invalido") {
-            alert("❌ QR inválido en entrada");
-            mensajeDiv.innerText = "❌ QR inválido o desactivado";
+            alert("QR inválido en entrada");
+            mensajeDiv.innerText = "QR inválido o desactivado";
             new Audio("<%= request.getContextPath() %>/audio/mostrar_qr.mp3").play();
 
         } else if (data.resultado === "duplicado") {
-            alert("⚠️ Ya estaba dentro/fuera");
-            mensajeDiv.innerText = "⚠️ Acceso duplicado";
+            alert("Ya estaba dentro/fuera");
+            mensajeDiv.innerText = "Acceso duplicado";
 
         } else if (data.resultado === "error") {
             if (data.detalle === "conexion_bd") {
-                alert("💥 Error de conexión a la base de datos");
-                mensajeDiv.innerText = "💥 Error de conexión a la base de datos";
+                alert(" Error de conexión a la base de datos");
+                mensajeDiv.innerText = "Error de conexión a la base de datos";
             } else if (data.detalle === "sql_error") {
-                alert("⚠️ Error en la consulta SQL");
-                mensajeDiv.innerText = "⚠️ Error en la consulta SQL";
+                alert("Error en la consulta SQL");
+                mensajeDiv.innerText = "Error en la consulta SQL";
             } else if (data.detalle === "formato_mensaje") {
-                alert("⚠️ Formato de QR inválido");
-                mensajeDiv.innerText = "⚠️ Formato de QR inválido";
+                alert("Formato de QR inválido");
+                mensajeDiv.innerText = "Formato de QR inválido";
             } else {
-                alert("⚠️ Error inesperado en servidor");
-                mensajeDiv.innerText = "⚠️ Error inesperado en servidor";
+                alert("Error inesperado en servidor");
+                mensajeDiv.innerText = "Error inesperado en servidor";
             }
 
         } else {
-            alert("⚠️ Error desconocido en validación del QR");
-            mensajeDiv.innerText = "⚠️ Error desconocido";
+            alert("Error desconocido en validación del QR");
+            mensajeDiv.innerText = "Error desconocido";
         }
     };
 
-    // --- Control de escaneo ---
     let ultimoQR = "";
     let tiempoUltimo = 0;
 
     function onScanSuccess(decodedText, decodedResult) {
         let ahora = Date.now();
         if (decodedText === ultimoQR && (ahora - tiempoUltimo) < 2000) {
-            console.log("⚠️ QR repetido ignorado en cliente:", decodedText);
+            console.log("QR repetido ignorado en cliente:", decodedText);
             return;
         }
         ultimoQR = decodedText;
@@ -103,7 +102,7 @@
 
     <br>
     <a class="btn btn-secondary" href="<%= request.getContextPath() %>/vistasAdmin/menuCamaras.jsp">
-        ⬅️ Volver al Menú de Cámaras
+        Volver al Menú de Cámaras
     </a>
 </body>
 </html>

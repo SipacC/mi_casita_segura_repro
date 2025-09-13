@@ -20,12 +20,12 @@
     <div class="list-group">
         <a class="list-group-item list-group-item-action" 
    href="<%= request.getContextPath() %>/vistasAdmin/camaraEntrada.jsp">
-    📷 Cámara Entrada (Teléfono 1)
+    Cámara Entrada (Teléfono 1)
 </a>
 
 <a class="list-group-item list-group-item-action" 
    href="<%= request.getContextPath() %>/vistasAdmin/camaraSalida.jsp">
-    📷 Cámara Salida (Teléfono 2)
+    Cámara Salida (Teléfono 2)
 </a>
     </div>
     <br>

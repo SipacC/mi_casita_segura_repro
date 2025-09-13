@@ -21,7 +21,6 @@ public class RegistrarQrAcceso {
         try {
             con = cn.getConnection();
 
-            // 1️⃣ Insertar en qr_usuario
             String sqlQr = "INSERT INTO qr_usuario(codigo_qr_usuario, id_usuario, tipo, estado) VALUES (?, ?, ?, ?)";
             ps = con.prepareStatement(sqlQr, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, codigoQR);
@@ -35,12 +34,11 @@ public class RegistrarQrAcceso {
                 idQrUsuario = rs.getInt(1);
             }
 
-            // 2️⃣ Insertar en acceso_usuario con estado inicial
             if (idQrUsuario > 0) {
                 String sqlAcceso = "INSERT INTO acceso_usuario(id_qr_usuario, tipo) VALUES (?, ?)";
                 ps = con.prepareStatement(sqlAcceso);
                 ps.setInt(1, idQrUsuario);
-                ps.setString(2, rol); // inicial como "residente", "admin", etc.
+                ps.setString(2, rol);
                 ps.executeUpdate();
             }
 

@@ -3,7 +3,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-    // Validación de sesión
     Modelo.Persona usr = (Modelo.Persona) session.getAttribute("usuario");
     if (usr == null) {
         response.sendRedirect(request.getContextPath() + "/ControladorLogin?accion=login");
@@ -16,9 +15,9 @@
     String idStr = null;
 
     if (idObj != null) {
-        idStr = idObj.toString();   // seguro, convierte Integer o String
+        idStr = idObj.toString();
     } else {
-        idStr = request.getParameter("id"); // fallback desde la URL
+        idStr = request.getParameter("id");
     }
 
     int id = Integer.parseInt(idStr);
@@ -38,8 +37,6 @@
     <div class="col-lg-6 mx-auto">
 
         <h1 class="mb-3">Modificar Persona</h1>
-
-        <!-- Mensaje de error si existe -->
         <% if (request.getAttribute("error") != null) { %>
             <div class="alert alert-danger text-center" role="alert">
                 <%= request.getAttribute("error") %>

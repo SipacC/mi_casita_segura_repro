@@ -4,13 +4,12 @@ public class Reserva {
     private int id_reserva;
     private int id_usuario;
     private int id_area;
-    private String nombreArea; // para el JOIN con AreaComun
+    private String nombreArea;
     private String fecha_reserva;
     private String hora_inicio;
     private String hora_fin;
     private String estado;
 
-    // Getters y Setters
     public int getId_reserva() { return id_reserva; }
     public void setId_reserva(int id_reserva) { this.id_reserva = id_reserva; }
 

@@ -8,8 +8,8 @@ import java.io.File;
 public class CorreoEnviarReserva {
 
     public static void enviarCorreo(String destinatario, String asunto, String mensaje, String rutaPDF) {
-        final String remitente = "sipacchuquiejj@gmail.com"; // tu correo
-        final String password = "fzdp wmxq aixb puxo";       // tu contraseña de aplicación
+        final String remitente = "sipacchuquiejj@gmail.com";
+        final String password = "fzdp wmxq aixb puxo";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -30,7 +30,6 @@ public class CorreoEnviarReserva {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
             message.setSubject(asunto);
 
-            // Cuerpo + adjunto
             MimeBodyPart texto = new MimeBodyPart();
             texto.setText(mensaje);
 
@@ -44,7 +43,7 @@ public class CorreoEnviarReserva {
             message.setContent(multipart);
 
             Transport.send(message);
-            System.out.println("📧 Correo de reserva enviado a " + destinatario);
+            System.out.println("Correo de reserva enviado a " + destinatario);
 
         } catch (Exception e) {
             e.printStackTrace();

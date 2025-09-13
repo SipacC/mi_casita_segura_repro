@@ -36,7 +36,7 @@
 </head>
 <body>
     <div class="denegado-container">
-        <h2>🚫 Acceso Denegado</h2>
+        <h2>Acceso Denegado</h2>
         <p>No tienes permisos para acceder a esta sección.</p>
 
         <% if (errorAuth0 != null) { %>

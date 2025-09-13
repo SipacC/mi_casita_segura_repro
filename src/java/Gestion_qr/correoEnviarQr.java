@@ -7,8 +7,8 @@ import javax.activation.*;
 
 public class correoEnviarQr {
 
-    private final String remitente = "sipacchuquiejj@gmail.com";   // ⚠️ tu correo
-    private final String password = "fzdp wmxq aixb puxo";       // ⚠️ App Password (no tu clave normal)
+    private final String remitente = "sipacchuquiejj@gmail.com";
+    private final String password = "fzdp wmxq aixb puxo";
 
     /**
      * Envía un correo con el QR adjunto
@@ -36,7 +36,6 @@ public class correoEnviarQr {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
             msg.setSubject("Notificación de accesos creados");
 
-            // Cuerpo del mensaje
             String cuerpo = "¡Hola!\n\n"
                     + "Se ha generado exitosamente tu código QR de acceso al residencial.\n"
                     + "A continuación, encontrarás los detalles de tu registro:\n\n"
@@ -49,7 +48,6 @@ public class correoEnviarQr {
             MimeBodyPart texto = new MimeBodyPart();
             texto.setText(cuerpo, "utf-8");
 
-            // Adjuntar QR
             MimeBodyPart adjunto = new MimeBodyPart();
             DataSource source = new FileDataSource(rutaQR);
             adjunto.setDataHandler(new DataHandler(source));

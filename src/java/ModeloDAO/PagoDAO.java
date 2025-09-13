@@ -15,14 +15,12 @@ public class PagoDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    // 🔹 Registrar un nuevo pago
-    // 🔹 Registrar un nuevo pago y devolver el ID generado
 public int registrarPago(Pago pago) {
     String sql = "INSERT INTO Pago (id_usuario, id_tipo, metodo_pago, fecha_pago, monto, mora, observaciones, estado) " +
                  "VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)";
     try {
         con = cn.getConnection();
-        ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // 🔹 importante
+        ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setInt(1, pago.getId_usuario());
         ps.setInt(2, pago.getId_tipo());
         ps.setString(3, pago.getMetodo_pago());
@@ -36,18 +34,16 @@ public int registrarPago(Pago pago) {
         if (rows > 0) {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getInt(1); // 🔹 devolvemos id_pago generado
+                    return rs.getInt(1);
                 }
             }
         }
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return -1; // 🔹 si falla
+    return -1;
 }
 
-
-    // 🔹 Listar todos los pagos de un usuario
     public List<Pago> listarPorUsuario(int idUsuario) {
         List<Pago> lista = new ArrayList<>();
         String sql = "SELECT * FROM Pago WHERE id_usuario = ? ORDER BY fecha_pago DESC";
@@ -75,19 +71,16 @@ public int registrarPago(Pago pago) {
         return lista;
     }
 
-    // 🔹 Calcular monto con mora (Mantenimiento) o devolver base (Multa/Reinstalación)
     public double calcularMontoConMora(int idUsuario, String tipoPago, java.sql.Date fechaCreacionUsuario) {
         TipoPagoDAO tipoDAO = new TipoPagoDAO();
         TipoPago tipo = tipoDAO.buscarPorNombre(tipoPago);
 
         if (tipo == null) {
-            System.err.println("❌ Tipo de pago no encontrado: " + tipoPago);
+            System.err.println("Tipo de pago no encontrado: " + tipoPago);
             return 0;
         }
 
         double montoBase = tipo.getMonto();
-
-        // ✅ Caso Mantenimiento
         if ("Mantenimiento".equalsIgnoreCase(tipoPago)) {
             String sql = "SELECT MAX(fecha_pago) AS ultimo_pago " +
                          "FROM Pago WHERE id_usuario = ? AND id_tipo = ?";
@@ -105,8 +98,6 @@ public int registrarPago(Pago pago) {
                 } else {
                     mesPendiente = fechaCreacionUsuario.toLocalDate();
                 }
-
-                // Calcular mora
                 LocalDate hoy = LocalDate.now();
                 LocalDate limite = mesPendiente.withDayOfMonth(5);
                 long diasRetraso = ChronoUnit.DAYS.between(limite, hoy);
@@ -120,11 +111,9 @@ public int registrarPago(Pago pago) {
             }
         }
 
-        // ✅ Caso Multa / Reinstalación → solo monto base
         return montoBase;
     }
 
-    // 🔹 Obtener el último pago de un usuario por tipo
     public Pago obtenerUltimoPago(int idUsuario, String tipoPago) {
         TipoPagoDAO tipoDAO = new TipoPagoDAO();
         TipoPago tipo = tipoDAO.buscarPorNombre(tipoPago);

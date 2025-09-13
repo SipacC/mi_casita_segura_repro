@@ -8,8 +8,8 @@ import java.io.File;
 
 public class CorreoEnviarFactura {
 
-    private final String remitente = "sipacchuquiejj@gmail.com";   // ⚠️ tu correo
-    private final String password = "fzdp wmxq aixb puxo";        // ⚠️ App Password (no tu clave normal)
+    private final String remitente = "sipacchuquiejj@gmail.com";
+    private final String password = "fzdp wmxq aixb puxo";
 
     /**
      * Envía un correo con la factura adjunta en PDF
@@ -40,7 +40,6 @@ public class CorreoEnviarFactura {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
             msg.setSubject("Factura generada: " + detallePago);
 
-            // 📌 Cuerpo del mensaje
             String cuerpo = "¡Hola " + nombreUsuario + "!\n\n"
                     + "Se ha realizado con éxito el " + detallePago + ".\n"
                     + "Adjunto encontrará su factura en formato PDF.\n\n"
@@ -49,10 +48,9 @@ public class CorreoEnviarFactura {
             MimeBodyPart texto = new MimeBodyPart();
             texto.setText(cuerpo, "utf-8");
 
-            // 📌 Adjuntar PDF
             File archivo = new File(rutaFactura);
             if (!archivo.exists()) {
-                System.err.println("❌ No se encontró el archivo PDF: " + rutaFactura);
+                System.err.println("No se encontró el archivo PDF: " + rutaFactura);
                 return false;
             }
 
@@ -67,13 +65,12 @@ public class CorreoEnviarFactura {
 
             msg.setContent(multipart);
 
-            // 📩 Enviar
             Transport.send(msg);
-            System.out.println("✅ Correo con factura enviado a " + destinatario);
+            System.out.println(" Correo con factura enviado a " + destinatario);
             return true;
 
         } catch (Exception e) {
-            System.err.println("❌ Error al enviar correo con factura: " + e.getMessage());
+            System.err.println("Error al enviar correo con factura: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
